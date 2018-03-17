@@ -1,6 +1,6 @@
 <?php
 /**
- * Include most things that are needed to make Hclear-bot work.
+ * Tidy HTML
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,21 +20,42 @@
  * @file
  */
 
-# For security, this script can only be run in cli mode
-if ( PHP_SAPI !== 'cli' ) {
-	echo "For security, this script can only be run in cli mode.\n";
-	die( 1 );
+namespace HclearBot;
+
+class Tidy extends \tidy {
+	/**
+	 * @var string Input content
+	 */
+	private $input;
+
+	public function __construct($input) {
+		$this->input = $input;
+	}
+
+	private function doTidy() {
+		$this->parseString( $this->input );
+		$this->cleanRepair();
+	}
+
+	/**
+	 * Filter <body> tag
+	 * @param string $input
+	 * @return string
+	 */
+	private function filterBodyTag(string $input) {
+		$search = [ "<body>\r\n", "\r\n</body>\r\n" ];
+		return str_replace( $search, null, $input );
+	}
+
+	/**
+	 * Get tidy HTML
+	 * @return string|null
+	 */
+	public function getTidyHTML() {
+		if ( empty( $this->value ) ) {
+			$this->doTidy();
+		}
+		$body = $this->body();
+		return $this->filterBodyTag( $body->value );
+	}
 }
-
-if ( !extension_loaded( 'tidy' ) ) {
-	trigger_error( "Tidy extension is not available.\n", E_USER_ERROR );
-}
-if ( !extension_loaded( 'curl' ) ) {
-	trigger_error( "cURL extension is not available.\n", E_USER_ERROR );
-}
-
-require_once APP_PATH .'/includes/AutoLoader.php';
-
-require_once APP_PATH . '/includes/GlobalFunctions.php';
-
-require_once APP_PATH . '/includes/Core.php';
