@@ -20,6 +20,9 @@
  * @file
  */
 
+// Define the absolute path to the root directory of this project
+define( 'APP_PATH', dirname(__DIR__) );
+
 # For security, this script can only be run in cli mode
 if ( PHP_SAPI !== 'cli' ) {
 	echo "For security, this script can only be run in cli mode.\n";
@@ -32,8 +35,17 @@ if ( !extension_loaded( 'tidy' ) ) {
 if ( !extension_loaded( 'curl' ) ) {
 	trigger_error( "cURL extension is not available.\n", E_USER_ERROR );
 }
+if ( !extension_loaded( 'mbstring' ) ) {
+	trigger_error( "mbstring extension is not available.\n", E_USER_ERROR );
+}
+
+mb_internal_encoding( 'UTF-8' );
 
 require_once APP_PATH .'/includes/AutoLoader.php';
+
+if ( defined( 'PHPUNIT_TEST' ) ) {
+	require_once APP_PATH . '/vendor/autoload.php';
+}
 
 require_once APP_PATH . '/includes/GlobalFunctions.php';
 

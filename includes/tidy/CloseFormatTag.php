@@ -68,6 +68,7 @@ class CloseFormatTag {
 
 		if ( $startTagOffset < $endTagOffset ) {
 			$this->scenario2( $startTagOffset, $endTagOffset );
+			return $this->value;
 		}
 	}
 
@@ -91,17 +92,19 @@ class CloseFormatTag {
 					$endTagOffset );
 		$count =  mb_substr_count( $text, $this->tag['start'] );
 		if ( $count === 0 ) {
-			
+			// Ignore
 		} elseif ( $count === 1 ) {
+			// Remove the second tag
 			$withoutStartTag = $this->removeStartTag( $text );
 			$this->value = $this->replaceStr( $this->input, $withoutStartTag,
 					$startTagOffset + $this->tagLen['startTag'], $endTagOffset );
 		} elseif ( $count === 2 ) {
-			$text2 = $this->catchStr( $this->input, $startTagOffset,
-					$endTagOffset + $this->tagLen['endTag'] );
-			$tidy = new Tidy( $text2 );
-			$this->value = $this->replaceStr( $this->input, $tidy->getTidyHTML(),
-					$startTagOffset, $endTagOffset + $this->tagLen['endTag'] );
+			// Close the second tag
+			$firstTagOffset = mb_strpos( $text, $this->tag['start'] );
+			$fixedStr = $this->replaceStr( $text, $this->tag['end'], $firstTagOffset,
+					$firstTagOffset + $this->tagLen['startTag'] );
+			$this->value = $this->replaceStr( $this->input, $fixedStr,
+					$startTagOffset + $this->tagLen['startTag'], $endTagOffset );
 		}
 	}
 

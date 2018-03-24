@@ -26,5 +26,7 @@ return [
 	'APIMultipleUnclosedFormattingTags' => APP_PATH . '/includes/api/APIMultipleUnclosedFormattingTags.php',
 	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
 	'APIRevisions' => APP_PATH . '/includes/api/APIRevisions.php',
-	'Tidy' => APP_PATH . '/includes/tidy.php'
+	'Tidy' => APP_PATH . '/includes/tidy.php',
+	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
+	'CloseFormatTag' => APP_PATH . '/includes/tidy/CloseFormatTag.php'
 ];

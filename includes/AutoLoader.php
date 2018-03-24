@@ -25,7 +25,12 @@ $gClassList = require_once APP_PATH . '/includes/ClassList.php';
 
 function classLoader($className) {
 	global $gClassList;
+
 	$wantLoadClass = str_replace( 'HclearBot\\', null, $className );
+
+	if ( !isset( $gClassList[$wantLoadClass] ) ) {
+		return false;
+	}
 
 	require_once $gClassList[$wantLoadClass];
 }

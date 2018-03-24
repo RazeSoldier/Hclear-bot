@@ -28,5 +28,6 @@ class HclearBot{
 	 */
 	public function run() {
 		$obj = new FixMultipleUnclosedFormattingTags();
+		$obj->execute();
 	}
 }

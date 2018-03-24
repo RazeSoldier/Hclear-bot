@@ -1,6 +1,6 @@
 <?php
 /**
- * Bootstrap file
+ * Used to fix MultipleUnclosedFormattingTags error
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,17 @@
  * @file
  */
 
-require_once __DIR__ . '/includes/Setup.php';
+namespace HclearBot;
 
-$HclearBot = new HclearBot\HclearBot();
-$HclearBot->run();
+abstract class Fixer {
+	/**
+	 * Used to catch HTML
+	 * @param string $input
+	 * @param int $start
+	 * @param int $end
+	 * @return string
+	 */
+	protected function catchHTML(string $input, int $start, int $end) {
+		return mb_substr( $input, $start, $end - $start );
+	}
+}
