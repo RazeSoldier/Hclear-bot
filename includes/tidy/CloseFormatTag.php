@@ -60,22 +60,20 @@ class CloseFormatTag {
 	public function doClose() {
 		$startTagOffset = mb_strpos( $this->input, $this->tag['start'] );
 		$endTagOffset = mb_strpos( $this->input, $this->tag['end'] );
+
 		if ( $endTagOffset === false ) {
-			echo $this->scenario1($startTagOffset);
-		}
-		die;
+			$this->scenario1( $startTagOffset );
+			return $this->value;
+		}	
+
 		if ( $startTagOffset < $endTagOffset ) {
-			$this->value = mb_substr( $this->input, $startTagOffset, $endTagOffset - $startTagOffset );
-			
-		} else {
-			
+			$this->scenario2( $startTagOffset, $endTagOffset );
 		}
 	}
 
 	/**
 	 * Used to handle case that without close tags and only with multiple start tags
 	 * @param int $startTagOffset Offset of the start tag
-	 * @return string
 	 */
 	private function scenario1(int $startTagOffset) {
 		$lastStartTagOffset['original'] = mb_strrpos( $this->input, $this->tag['start'] );
@@ -84,8 +82,27 @@ class CloseFormatTag {
 		$value = $this->replaceStr( $this->input, $withoutStartTag,
 				$startTagOffset + $this->tagLen['startTag'], $lastStartTagOffset['original'] );
 		$lastStartTagOffset['processed'] = mb_strrpos( $value, $this->tag['start'] );
-		return $this->replaceStr( $value, $this->tag['end'], $lastStartTagOffset['processed'],
+		$this->value = $this->replaceStr( $value, $this->tag['end'], $lastStartTagOffset['processed'],
 				$lastStartTagOffset['processed'] + $this->tagLen['endTag'] - 1 );
+	}
+
+	private function scenario2(int $startTagOffset, int $endTagOffset) {
+		$text = $this->catchStr( $this->input, $startTagOffset + $this->tagLen['startTag'],
+					$endTagOffset );
+		$count =  mb_substr_count( $text, $this->tag['start'] );
+		if ( $count === 0 ) {
+			
+		} elseif ( $count === 1 ) {
+			$withoutStartTag = $this->removeStartTag( $text );
+			$this->value = $this->replaceStr( $this->input, $withoutStartTag,
+					$startTagOffset + $this->tagLen['startTag'], $endTagOffset );
+		} elseif ( $count === 2 ) {
+			$text2 = $this->catchStr( $this->input, $startTagOffset,
+					$endTagOffset + $this->tagLen['endTag'] );
+			$tidy = new Tidy( $text2 );
+			$this->value = $this->replaceStr( $this->input, $tidy->getTidyHTML(),
+					$startTagOffset, $endTagOffset + $this->tagLen['endTag'] );
+		}
 	}
 
 	/**
