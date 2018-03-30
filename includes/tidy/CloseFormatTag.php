@@ -63,6 +63,7 @@ class CloseFormatTag {
 	}
 
 	public function doClose() {
+		// Initialize a process in the loop
 		$needCheckText = mb_substr( $this->value, $this->checkStartOffset );
 		$startTagOffset = mb_strpos( $needCheckText, $this->tag['start'] );
 		$endTagOffset = mb_strpos( $needCheckText, $this->tag['end'] );
@@ -84,6 +85,7 @@ class CloseFormatTag {
 		// Changes the offset of start checkpoint
 		$this->checkStartOffset = $this->checkStartOffset + $endTagOffset + $this->tagLen['endTag'] + $check['diff'];
 
+		// Start loop
 		if ( $this->checkStartOffset < mb_strlen( $this->value ) ) {
 			$this->doClose();
 		}
@@ -94,6 +96,7 @@ class CloseFormatTag {
 	/**
 	 * Used to handle case that without close tags and only with multiple start tags
 	 * @param int $startTagOffset Offset of the start tag
+	 * @return array
 	 */
 	private function scenario1(string $needCheckText, int $startTagOffset) {
 		$lastStartTagOffset['original'] = mb_strrpos( $needCheckText, $this->tag['start'] );
@@ -108,6 +111,13 @@ class CloseFormatTag {
 		return $result;
 	}
 
+	/**
+	 * Used to handle case that there a start tag between a set of tags
+	 * @param string $needCheckText
+	 * @param int $startTagOffset
+	 * @param int $endTagOffset
+	 * @return array
+	 */
 	private function scenario2(string $needCheckText, int $startTagOffset, int $endTagOffset) {
 		$text = new TextNode( $this->catchStr( $needCheckText, $startTagOffset + $this->tagLen['startTag'],
 					$endTagOffset ) );
@@ -163,6 +173,14 @@ class CloseFormatTag {
 		return mb_ereg_replace( $this->tag['end'], null, $input );
 	}
 
+	/**
+	 * Replace the target field with the provided parameter - $replacement
+	 * @param string $input
+	 * @param string $replacement The content that need to replace
+	 * @param int $startOffset The starting offset of the target field
+	 * @param int $endOffset The ending offset of the target field
+	 * @return string
+	 */
 	private function replaceStr(string $input, string $replacement, int $startOffset, int $endOffset) {
 		$start = mb_substr( $input, 0, $startOffset );
 		$end = mb_substr( $input, $endOffset );
