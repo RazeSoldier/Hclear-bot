@@ -1,6 +1,6 @@
 <?php
 /**
- * This is a class list that includes all class
+ * HTML node
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,21 @@
  * @file
  */
 
-return [
-	'CurlConnector' => APP_PATH . '/includes/connector/CurlConnector.php',
-	'ApiBase' => APP_PATH . '/includes/api/ApiBase.php',
-	'APIMultipleUnclosedFormattingTags' => APP_PATH . '/includes/api/APIMultipleUnclosedFormattingTags.php',
-	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
-	'APIRevisions' => APP_PATH . '/includes/api/APIRevisions.php',
-	'Tidy' => APP_PATH . '/includes/tidy.php',
-	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
-	'CloseFormatTag' => APP_PATH . '/includes/tidy/CloseFormatTag.php',
-	'TextNode' => APP_PATH . '/includes/tidy/TextNode.php'
-];
+namespace HclearBot;
+
+class TextNode {
+	private $input;
+
+	public $value;
+
+	public $strLen;
+
+	public function __construct(string $html) {
+		$this->value = $this->input = $html;
+		$this->strLen = mb_strlen( $this->input );
+	}
+
+	public function __toString() {
+		return $this->value;
+	}
+}

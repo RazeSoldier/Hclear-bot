@@ -48,8 +48,13 @@ class CloseFormatTag {
 	 */
 	private $value;
 
+	/**
+	 * @var int
+	 */
+	private $checkStartOffset = 0;
+
 	public function __construct(string $input, string $needCloseTagName) {
-		$this->input = $input;
+		$this->value = $this->input = $input;
 		$this->needCloseTagName = $needCloseTagName;
 		$this->tag['start'] = "<{$needCloseTagName}>";
 		$this->tag['end'] = "</{$needCloseTagName}>";
@@ -58,54 +63,75 @@ class CloseFormatTag {
 	}
 
 	public function doClose() {
-		$startTagOffset = mb_strpos( $this->input, $this->tag['start'] );
-		$endTagOffset = mb_strpos( $this->input, $this->tag['end'] );
+		$needCheckText = mb_substr( $this->value, $this->checkStartOffset );
+		$startTagOffset = mb_strpos( $needCheckText, $this->tag['start'] );
+		$endTagOffset = mb_strpos( $needCheckText, $this->tag['end'] );
+		$preCheckText = mb_substr( $this->value, 0, $this->checkStartOffset );
+		$check['diff'] = 0;
 
-		if ( $endTagOffset === false ) {
-			$this->scenario1( $startTagOffset );
-			return $this->value;
-		}	
-
-		if ( $startTagOffset < $endTagOffset ) {
-			$this->scenario2( $startTagOffset, $endTagOffset );
-			return $this->value;
+		// Match Scenario 1
+		if ( $startTagOffset !== false && $endTagOffset === false ) {
+			$check = $this->scenario1( $needCheckText, $startTagOffset );
+			$this->value = $preCheckText . $check['text'];
 		}
+
+		// Match Scenario 2
+		if ( $startTagOffset < $endTagOffset ) {
+			$check = $this->scenario2( $needCheckText, $startTagOffset, $endTagOffset );
+			$this->value = $preCheckText . $check['text'];
+		}
+
+		// Changes the offset of start checkpoint
+		$this->checkStartOffset = $this->checkStartOffset + $endTagOffset + $this->tagLen['endTag'] + $check['diff'];
+
+		if ( $this->checkStartOffset < mb_strlen( $this->value ) ) {
+			$this->doClose();
+		}
+		
+		return $this->value;
 	}
 
 	/**
 	 * Used to handle case that without close tags and only with multiple start tags
 	 * @param int $startTagOffset Offset of the start tag
 	 */
-	private function scenario1(int $startTagOffset) {
-		$lastStartTagOffset['original'] = mb_strrpos( $this->input, $this->tag['start'] );
-		$withoutStartTag = $this->removeStartTag( $this->catchStr( $this->input,
+	private function scenario1(string $needCheckText, int $startTagOffset) {
+		$lastStartTagOffset['original'] = mb_strrpos( $needCheckText, $this->tag['start'] );
+		$withoutStartTag = new TextNode( $this->removeStartTag( $this->catchStr( $needCheckText,
+				$startTagOffset + $this->tagLen['startTag'], $lastStartTagOffset['original'] ) ) );
+		$value = new TextNode( $this->replaceStr( $this->input, $withoutStartTag,
 				$startTagOffset + $this->tagLen['startTag'], $lastStartTagOffset['original'] ) );
-		$value = $this->replaceStr( $this->input, $withoutStartTag,
-				$startTagOffset + $this->tagLen['startTag'], $lastStartTagOffset['original'] );
 		$lastStartTagOffset['processed'] = mb_strrpos( $value, $this->tag['start'] );
-		$this->value = $this->replaceStr( $value, $this->tag['end'], $lastStartTagOffset['processed'],
-				$lastStartTagOffset['processed'] + $this->tagLen['endTag'] - 1 );
+		$result['text'] = new TextNode( $this->replaceStr( $value, $this->tag['end'], $lastStartTagOffset['processed'],
+				$lastStartTagOffset['processed'] + $this->tagLen['endTag'] - 1 ) );
+		$result['diff'] = mb_strlen( $needCheckText ) - $result['text']->strLen;
+		return $result;
 	}
 
-	private function scenario2(int $startTagOffset, int $endTagOffset) {
-		$text = $this->catchStr( $this->input, $startTagOffset + $this->tagLen['startTag'],
-					$endTagOffset );
+	private function scenario2(string $needCheckText, int $startTagOffset, int $endTagOffset) {
+		$text = new TextNode( $this->catchStr( $needCheckText, $startTagOffset + $this->tagLen['startTag'],
+					$endTagOffset ) );
 		$count =  mb_substr_count( $text, $this->tag['start'] );
 		if ( $count === 0 ) {
 			// Ignore
+			$result['text'] = $needCheckText;
+			$result['diff'] = 0;
 		} elseif ( $count === 1 ) {
 			// Remove the second tag
-			$withoutStartTag = $this->removeStartTag( $text );
-			$this->value = $this->replaceStr( $this->input, $withoutStartTag,
+			$withoutStartTag = new TextNode( $this->removeStartTag( $text ) );
+			$result['text'] = $this->replaceStr( $needCheckText, $withoutStartTag,
 					$startTagOffset + $this->tagLen['startTag'], $endTagOffset );
+			$result['diff'] = $text->strLen - $withoutStartTag->strLen;
 		} elseif ( $count === 2 ) {
 			// Close the second tag
 			$firstTagOffset = mb_strpos( $text, $this->tag['start'] );
-			$fixedStr = $this->replaceStr( $text, $this->tag['end'], $firstTagOffset,
-					$firstTagOffset + $this->tagLen['startTag'] );
-			$this->value = $this->replaceStr( $this->input, $fixedStr,
+			$fixedStr = new TextNode( $this->replaceStr( $text, $this->tag['end'], $firstTagOffset,
+					$firstTagOffset + $this->tagLen['startTag'] ) );
+			$result['text'] = $this->replaceStr( $needCheckText, $fixedStr,
 					$startTagOffset + $this->tagLen['startTag'], $endTagOffset );
+			$result['diff'] = $fixedStr->strLen - $text->strLen;
 		}
+		return $result;
 	}
 
 	/**
