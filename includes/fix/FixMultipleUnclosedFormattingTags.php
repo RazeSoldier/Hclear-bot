@@ -26,7 +26,7 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	private $errorList;
 
 	public function __construct() {
-		$api = new APIMultipleUnclosedFormattingTags( 20 );
+		$api = new APIMultipleUnclosedFormattingTags( 'batch', 20 );
 		$this->errorList = $api->getData()['query']['linterrors'];
 	}
 
@@ -38,18 +38,25 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	}
 
 	private function main(array $data) {
+		if ( !empty( $data['templateInfo'] ) ) {
+			// Ignore, if the output does not come from a single template
+			if ( !isset( $data['templateInfo']['multiPartTemplateBlock'] ) ) {
+				$this->handleTemplateError( $data['templateInfo']['name'] );
+			}
+		}
 		$revision = new APIRevisions( $data['pageid'] );
 		$text = $this->catchHTML( $revision->getContent(), $data['location'][0], $data['location'][1] );
+		$tidy = new CloseFormatTag( $text, $data['params']['name'] );
 	}
 
-	/**
-	 * Do fix action
-	 * @param string $needFix
-	 * @param string $text
-	 * @return string
-	 */
-	private function doFix(string $needFix, string $text) {
-		$startTag = "<{$needFix}>";
-		$endTag = "</{$needFix}>";
+	private function handleTemplateError($templateName) {
+		$revision = new APIRevisions( $templateName, true );
+		$apier = new APIMultipleUnclosedFormattingTags( 'alone', $revision->getPageID() );
+		if ( !isset( $apier->getData()['query']['linterrors'] ) ) {
+			return;
+		}
+		foreach ( $apier->getData()['query']['linterrors'] as $value ) {
+			$this->main( $value );
+		}
 	}
 }

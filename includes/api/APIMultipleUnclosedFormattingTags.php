@@ -23,9 +23,17 @@
 namespace HclearBot;
 
 class APIMultipleUnclosedFormattingTags extends ApiBase {
-	public function __construct(int $queryLimit = 10) {
-		$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
-				. "&lntcategories=multiple-unclosed-formatting-tags&lntlimit={$queryLimit}", 'zhwiki' );
+	public function __construct(string $query, $extra) {
+		switch ( $query ) {
+			case 'batch':				
+				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
+				. "&lntcategories=multiple-unclosed-formatting-tags&lntlimit={$extra}", 'zhwiki' );
+				break;
+			case 'alone':
+				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
+				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$extra}", 'zhwiki' );
+				break;
+		}
 		$c = new CurlConnector( $this->apiURL );
 		$this->apiResponseData = jsonToArray( $c->get() );
 	}

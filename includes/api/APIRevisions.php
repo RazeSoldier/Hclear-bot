@@ -23,9 +23,16 @@
 namespace HclearBot;
 
 class APIRevisions extends ApiBase {
-	public function __construct(int $pageID) {
-		$this->apiURL = $this->spliceApiURL( 'action=query&format=json&prop=revisions'
-				. "&pageids={$pageID}&formatversion=2&rvprop=content", 'zhwiki' );
+	public function __construct($pageName, bool $titleOption = false) {
+		if ( $titleOption ) {
+			$this->apiURL = $this->spliceApiURL( 'action=query&format=json&prop=revisions'
+				. "&titles={$pageName}&formatversion=2&rvprop=content", 'zhwiki' );
+		} else {
+			$this->apiURL = $this->spliceApiURL( 'action=query&format=json&prop=revisions'
+				. "&pageids={$pageName}&formatversion=2&rvprop=content", 'zhwiki' );
+		}
+		$c = new CurlConnector( $this->apiURL );
+		$this->apiResponseData = jsonToArray( $c->get() );
 	}
 
 	/**
@@ -33,8 +40,7 @@ class APIRevisions extends ApiBase {
 	 * @return array
 	 */
 	public function getData() {
-		$c = new CurlConnector( $this->apiURL );
-		return jsonToArray( $c->get() );
+		return $this->apiResponseData;
 	}
 
 	/**
@@ -42,7 +48,14 @@ class APIRevisions extends ApiBase {
 	 * @return string
 	 */
 	public function getContent() {
-		$arr = $this->getData();
-		return $arr['query']['pages'][0]['revisions'][0]['content'];
+		return $this->apiResponseData['query']['pages'][0]['revisions'][0]['content'];
+	}
+
+	/**
+	 * Get page ID
+	 * @retuan int
+	 */
+	public function getPageID() {
+		return $this->apiResponseData['query']['pages'][0]['pageid'];
 	}
 }
