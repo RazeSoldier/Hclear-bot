@@ -89,7 +89,7 @@ class CloseFormatTag {
 		if ( $this->checkStartOffset < mb_strlen( $this->value ) ) {
 			$this->doClose();
 		}
-		
+
 		return $this->value;
 	}
 
@@ -102,12 +102,12 @@ class CloseFormatTag {
 		$lastStartTagOffset['original'] = mb_strrpos( $needCheckText, $this->tag['start'] );
 		$withoutStartTag = new TextNode( $this->removeStartTag( $this->catchStr( $needCheckText,
 				$startTagOffset + $this->tagLen['startTag'], $lastStartTagOffset['original'] ) ) );
-		$value = new TextNode( $this->replaceStr( $this->input, $withoutStartTag,
-				$startTagOffset + $this->tagLen['startTag'], $lastStartTagOffset['original'] ) );
+		$value = $this->replaceStr( $needCheckText, $withoutStartTag,
+				$startTagOffset + $this->tagLen['startTag'], $lastStartTagOffset['original'] );
 		$lastStartTagOffset['processed'] = mb_strrpos( $value, $this->tag['start'] );
 		$result['text'] = new TextNode( $this->replaceStr( $value, $this->tag['end'], $lastStartTagOffset['processed'],
 				$lastStartTagOffset['processed'] + $this->tagLen['endTag'] - 1 ) );
-		$result['diff'] = mb_strlen( $needCheckText ) - $result['text']->strLen;
+		$result['diff'] = $result['text']->strLen - mb_strlen( $needCheckText );
 		return $result;
 	}
 

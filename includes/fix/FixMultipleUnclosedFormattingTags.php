@@ -22,11 +22,34 @@
 
 namespace HclearBot;
 
-class FixMultipleUnclosedFormattingTags {
+class FixMultipleUnclosedFormattingTags extends Fixer {
 	private $errorList;
 
 	public function __construct() {
 		$api = new APIMultipleUnclosedFormattingTags( 20 );
-		$this->errorList = $api->getData();
+		$this->errorList = $api->getData()['query']['linterrors'];
+	}
+
+	public function execute() {
+		$count = count( $this->errorList );
+		for ( $i = 0; $i < $count; $i++ ) {
+			$this->main( $this->errorList[$i] );
+		}
+	}
+
+	private function main(array $data) {
+		$revision = new APIRevisions( $data['pageid'] );
+		$text = $this->catchHTML( $revision->getContent(), $data['location'][0], $data['location'][1] );
+	}
+
+	/**
+	 * Do fix action
+	 * @param string $needFix
+	 * @param string $text
+	 * @return string
+	 */
+	private function doFix(string $needFix, string $text) {
+		$startTag = "<{$needFix}>";
+		$endTag = "</{$needFix}>";
 	}
 }
