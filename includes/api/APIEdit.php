@@ -44,11 +44,7 @@ class APIEdit extends ApiBase {
 	 */
 	public function doEdit($pageName, string $text, string $summary = null) {
 		global $gClient, $gAccessToken;
-		if ( is_int( $pageName ) ) {
-			$varKey = 'pageid';
-		} else {
-			$varKey = 'title';
-		}
+		$varKey = ( is_int( $pageName ) ) ? 'pageid' : 'title';
 		$apiParams = [
 			'action' => 'edit',
 			$varKey => $pageName,
