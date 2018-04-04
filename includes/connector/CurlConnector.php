@@ -59,6 +59,9 @@ class CurlConnector {
 		curl_setopt( $this->curlResource, CURLOPT_AUTOREFERER, true );
 		curl_setopt( $this->curlResource, CURLOPT_SSL_VERIFYPEER, false );
 		curl_setopt( $this->curlResource, CURLOPT_FOLLOWLOCATION, true );
+		if ( $this->mode === 'POST' ) {
+			curl_setopt( $this->curlResource, CURLOPT_POST, true );
+		}
 	}
 
 	/**
@@ -74,5 +77,23 @@ class CurlConnector {
 			return false;
 		}
 		return $result;
+	}
+
+	public function post(array $postData) {
+		$this->mode = 'POST';
+		$this->main();
+		curl_setopt( $this->curlResource, CURLOPT_POSTFIELDS, $postData );
+		$result = curl_exec( $this->curlResource );
+		if ( $result === false ) {
+			trigger_error( "Post failed: Can't post something to {$this->url}", E_USER_WARNING );
+			return false;
+		}
+		return $result;
+	}
+
+	public function __destruct() {
+		if ( is_resource( $this->curlResource ) ) {
+			curl_close( $this->curlResource );
+		}
 	}
 }

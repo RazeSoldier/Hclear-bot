@@ -38,12 +38,14 @@ if ( !extension_loaded( 'mbstring' ) ) {
 
 mb_internal_encoding( 'UTF-8' );
 
+require_once APP_PATH . '/config.php';
+
 require_once APP_PATH .'/includes/AutoLoader.php';
 
-if ( defined( 'PHPUNIT_TEST' ) ) {
-	require_once APP_PATH . '/vendor/autoload.php';
-}
+require_once APP_PATH . '/vendor/autoload.php';
 
 require_once APP_PATH . '/includes/GlobalFunctions.php';
 
 require_once APP_PATH . '/includes/Core.php';
+
+HclearBot\Core::oauthAuthorize();

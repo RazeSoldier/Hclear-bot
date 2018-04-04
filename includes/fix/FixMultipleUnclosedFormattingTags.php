@@ -47,6 +47,10 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		$revision = new APIRevisions( $data['pageid'] );
 		$text = $this->catchHTML( $revision->getContent(), $data['location'][0], $data['location'][1] );
 		$tidy = new CloseFormatTag( $text, $data['params']['name'] );
+		$result = $this->replaceStr( $revision->getContent(), $tidy->doClose(),
+				$data['location'][0], $data['location'][1] );
+		$edit = new APIEdit();
+		var_dump($edit->doEdit($data['pageid'], $result, 'test'));die;
 	}
 
 	private function handleTemplateError($templateName) {
@@ -58,5 +62,19 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		foreach ( $apier->getData()['query']['linterrors'] as $value ) {
 			$this->main( $value );
 		}
+	}
+
+	/**
+	 * Replace the target field with the provided parameter - $replacement
+	 * @param string $input
+	 * @param string $replacement The content that need to replace
+	 * @param int $startOffset The starting offset of the target field
+	 * @param int $endOffset The ending offset of the target field
+	 * @return string
+	 */
+	private function replaceStr(string $input, string $replacement, int $startOffset, int $endOffset) {
+		$start = mb_substr( $input, 0, $startOffset );
+		$end = mb_substr( $input, $endOffset );
+		return $start . $replacement . $end;
 	}
 }

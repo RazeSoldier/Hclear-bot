@@ -22,12 +22,34 @@
 
 namespace HclearBot;
 
-class HclearBot{
+use MediaWiki\OAuthClient\{
+	ClientConfig,
+	Consumer,
+	Client,
+	Token
+};
+
+class Core {
 	/**
 	 * Run bot
 	 */
 	public function run() {
 		$obj = new FixMultipleUnclosedFormattingTags();
 		$obj->execute();
+	}
+
+	static public function oauthAuthorize() {
+		global $gConsumerKey, $gConsumerSecret, $gAccessKey, $gAccessSecret;
+		$endpoint = 'https://zh.wikipedia.org/w/index.php?title=Special:OAuth';
+		$redir = 'https://zh.wikipedia.org/w/Special:OAuth?';
+		$conf = new ClientConfig( $endpoint );
+		$conf->setRedirURL( $redir );
+		$conf->setConsumer( new Consumer( $gConsumerKey, $gConsumerSecret ) );
+
+		$GLOBALS['gClient'] = new Client( $conf );
+		$GLOBALS['gAccessToken'] = new Token( $gAccessKey, $gAccessSecret );
+
+		$ident = $GLOBALS['gClient']->identify( $GLOBALS['gAccessToken'] );
+		echo "Authenticated user: {$ident->username}\n";
 	}
 }
