@@ -29,9 +29,6 @@ if ( PHP_SAPI !== 'cli' ) {
 	die( 1 );
 }
 
-if ( !extension_loaded( 'tidy' ) ) {
-	trigger_error( "Tidy extension is not available.\n", E_USER_ERROR );
-}
 if ( !extension_loaded( 'curl' ) ) {
 	trigger_error( "cURL extension is not available.\n", E_USER_ERROR );
 }

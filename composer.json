@@ -1,5 +1,8 @@
 {
     "require-dev": {
         "phpunit/phpunit": "^6.5"
+    },
+    "require": {
+        "mediawiki/oauthclient": "^0.1.2"
     }
 }
