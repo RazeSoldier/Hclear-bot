@@ -33,4 +33,42 @@ abstract class Fixer {
 	protected function catchHTML(string $input, int $start, int $end) {
 		return mb_substr( $input, $start, $end - $start );
 	}
+
+	/**
+	 * 
+	 * @param array $data
+	 * @return array
+	 */
+	static protected function logging(array $data) {
+		if ( isset( $data['sendResult']['edit']['result'] ) ) {
+			if ( $data['sendResult']['edit']['result'] === 'Success' ) {
+				$result = 'Success';
+			} elseif ( isset( $data['sendResult']['edit']['nochange'] ) ) {
+				$result = 'without diff';
+			} else {
+				$result = $data['sendResult']['edit']['result'];
+			}
+		} else {
+			$result = 'Edit failed';
+		}
+		if ( !empty( $data['queryResult']['templateInfo'] ) ) {
+			if ( !isset( $data['queryResult']['templateInfo']['multiPartTemplateBlock'] ) ) {
+				$isViaTemplateOutput = $data['queryResult']['templateInfo']['name'];
+				} else {
+				$isViaTemplateOutput = 'multiPartTemplateOutput';
+			}
+		} else {
+			$isViaTemplateOutput = false;
+		}
+		$returnValue =  [
+			'pageName' => $data['queryResult']['title'],
+			'pageID' => $data['queryResult']['pageid'],
+			'isViaTemplateOutput?' => $isViaTemplateOutput,
+			'result' => $result
+		];
+		if ( isset( $data['sendResult']['error'] ) ) {
+			$returnValue['errorMsg'] = $data['sendResult']['error'];
+		}
+		return $returnValue;
+	}
 }

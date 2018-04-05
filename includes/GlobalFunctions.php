@@ -30,3 +30,20 @@ namespace HclearBot;
 function jsonToArray(string $jsonData) {
 	return json_decode( $jsonData, true );
 }
+
+/**
+ * Find the offset of No.$count $find substring in $str
+ * @param string $str
+ * @param string $find
+ * @param int $count
+ * @param int $offset
+ * @return int
+ */
+function findSubStr(string $str, string $find, int $count, int $offset = 0) {
+	$pos = mb_stripos( $str, $find, $offset );
+	$count--;
+	if ( $count > 0 && $pos !== false ) {
+		$pos = findSubStr( $str, $find, $count, $pos + 1 );
+	}
+	return $pos;
+}

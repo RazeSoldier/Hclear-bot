@@ -50,10 +50,11 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		$result = $this->replaceStr( $revision->getContent(), $tidy->doClose(),
 				$data['location'][0], $data['location'][1] );
 		$edit = new APIEdit();
-		var_dump($edit->doEdit($data['pageid'], $result, 'test'));die;
+		$send = $edit->doEdit($data['pageid'], $result, 'Fix multiple-unclosed-formatting-tags error');
+		var_dump(parent::logging( [ 'queryResult' => $data, 'sendResult' => $send ] ));
 	}
 
-	private function handleTemplateError($templateName) {
+	private function handleTemplateError(string $templateName) {
 		$revision = new APIRevisions( $templateName, true );
 		$apier = new APIMultipleUnclosedFormattingTags( 'alone', $revision->getPageID() );
 		if ( !isset( $apier->getData()['query']['linterrors'] ) ) {

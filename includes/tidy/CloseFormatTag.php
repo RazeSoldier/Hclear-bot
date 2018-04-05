@@ -126,17 +126,16 @@ class CloseFormatTag {
 			// Ignore
 			$result['text'] = $needCheckText;
 			$result['diff'] = 0;
-		} elseif ( $count === 1 ) {
+		} elseif ( $count % 2 === 1 ) {
 			// Remove the second tag
 			$withoutStartTag = new TextNode( $this->removeStartTag( $text ) );
 			$result['text'] = $this->replaceStr( $needCheckText, $withoutStartTag,
 					$startTagOffset + $this->tagLen['startTag'], $endTagOffset );
 			$result['diff'] = $text->strLen - $withoutStartTag->strLen;
-		} elseif ( $count === 2 ) {
+		} elseif ( $count % 2 === 0 ) {
 			// Close the second tag
 			$firstTagOffset = mb_strpos( $text, $this->tag['start'] );
-			$fixedStr = new TextNode( $this->replaceStr( $text, $this->tag['end'], $firstTagOffset,
-					$firstTagOffset + $this->tagLen['startTag'] ) );
+			$fixedStr = new TextNode( $this->closeTag( $text, $firstTagOffset ) );
 			$result['text'] = $this->replaceStr( $needCheckText, $fixedStr,
 					$startTagOffset + $this->tagLen['startTag'], $endTagOffset );
 			$result['diff'] = $fixedStr->strLen - $text->strLen;
@@ -185,5 +184,16 @@ class CloseFormatTag {
 		$start = mb_substr( $input, 0, $startOffset );
 		$end = mb_substr( $input, $endOffset );
 		return $start . $replacement . $end;
+	}
+
+	/**
+	 * Close tag in a given string
+	 * @param string $text
+	 * @param int $offset
+	 * @return string
+	 */
+	private function closeTag(string $text, int $offset = 0) {
+		return $this->replaceStr( $text, $this->tag['end'], $offset,
+				$offset + $this->tagLen['startTag'] );
 	}
 }

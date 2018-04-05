@@ -26,14 +26,16 @@ class APIEdit extends ApiBase {
 	/**
 	 * @var string
 	 */
-	private $editToken;
+	static private $editToken;
 
 	public function __construct() {
 		global $gClient, $gAccessToken;
-		$this->editToken = json_decode( $gClient->makeOAuthCall( $gAccessToken,
+		if ( self::$editToken === null ) {
+			self::$editToken = json_decode( $gClient->makeOAuthCall( $gAccessToken,
 				$this->spliceApiURL( 'action=tokens&format=json', 'zhwiki' )
 				)
-		)->tokens->edittoken;
+			)->tokens->edittoken;
+		}
 	}
 
 	/**
@@ -53,7 +55,7 @@ class APIEdit extends ApiBase {
 			$varKey => $pageName,
 			'summary' => $summary,
 			'text' => $text,
-			'token' => $this->editToken,
+			'token' => self::$editToken,
 			'format' => 'json',
 		];
 		$gClient->setExtraParams( $apiParams );
