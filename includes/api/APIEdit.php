@@ -23,6 +23,9 @@
 namespace HclearBot;
 
 class APIEdit extends ApiBase {
+	/**
+	 * @var string
+	 */
 	private $editToken;
 
 	public function __construct() {
@@ -39,7 +42,7 @@ class APIEdit extends ApiBase {
 	 * @global object $gAccessToken
 	 * @param string|int $pageName A page title or page ID
 	 * @param string $text
-	 * @param string $summary
+	 * @param string|null $summary
 	 * @return array
 	 */
 	public function doEdit($pageName, string $text, string $summary = null) {

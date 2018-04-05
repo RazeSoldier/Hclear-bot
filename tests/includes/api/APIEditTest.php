@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Test the class can edit a page
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,26 +24,11 @@ namespace HclearBot\test;
 
 use PHPUnit\Framework\TestCase;
 
-class EditTest extends TestCase {
-	public function test1() {
-		global $gClient, $gAccessToken;
-		$editToken = json_decode( $gClient->makeOAuthCall( $gAccessToken,
-				'https://zh.wikipedia.org/w/api.php?action=tokens&format=json'
-				) )->tokens->edittoken;
-		$apiParams = [
-			'action' => 'edit',
-			'pageid' => 548296,
-			'summary' => 'test',
-			'text' => 'This is a test.',
-			'token' => $editToken,
-			'format' => 'json',
-		];
-		$gClient->setExtraParams( $apiParams );
-		echo $gClient->makeOAuthCall(
-			$gAccessToken,
-			'https://zh.wikipedia.org/w/api.php',
-			true,
-			$apiParams
-		);
+class APIEditTest extends TestCase {
+	public function testEdit() {
+		$edit = new \HclearBot\APIEdit();
+		$result = $edit->doEdit( 'WP:沙盒', 'test', '测试' );
+		$expected = 'Success';
+		$this->assertEquals( $expected, $result['edit']['result'] );
 	}
 }
