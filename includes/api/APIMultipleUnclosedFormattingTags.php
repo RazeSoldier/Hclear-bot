@@ -25,24 +25,38 @@ namespace HclearBot;
 class APIMultipleUnclosedFormattingTags extends ApiBase {
 	public function __construct(string $query, $extra) {
 		switch ( $query ) {
-			case 'batch':				
+			case 'batch':
+				if ( !is_int( $extra ) ) {
+					throw new \RuntimeException( '$extra is not an integer.' );
+				}
 				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
 				. "&lntcategories=multiple-unclosed-formatting-tags&lntlimit={$extra}", 'zhwiki' );
 				break;
 			case 'alone':
+				if ( !is_int( $extra ) ) {
+					throw new \RuntimeException( '$extra is not an integer.' );
+				}
 				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
 				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$extra}", 'zhwiki' );
+				break;
+			case 'list':
+				if ( !is_array( $extra ) ) {
+					throw new \RuntimeException( '$extra is not an array.' );
+				}
+				$queryList = null;
+				foreach( $extra as $value ) {
+					if ( $queryList === null ) {
+						$queryList = $value;
+					} else {
+						$queryList = $queryList . '|' . $value;
+					}
+				}
+				$queryList = rawurlencode( $queryList );
+				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
+				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$queryList}", 'zhwiki' );
 				break;
 		}
 		$c = new CurlConnector( $this->apiURL );
 		$this->apiResponseData = jsonToArray( $c->get() );
-	}
-
-	/**
-	 * Get data from MultipleUnclosedFormattingTags API
-	 * @return array
-	 */
-	public function getData() {
-		return $this->apiResponseData;
 	}
 }

@@ -57,5 +57,5 @@ function findSubStr(string $str, string $find, int $count, int $offset = 0) {
  * @throws ErrorException
  */
 function exception_error_handler(int $errno, string $errstr,string $errfile, int $errline) {
-    throw new ErrorException( $errstr, 0, $errno, $errfile, $errline );
+    throw new \ErrorException( $errstr, 0, $errno, $errfile, $errline );
 }

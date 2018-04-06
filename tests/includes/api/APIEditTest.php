@@ -26,8 +26,7 @@ use PHPUnit\Framework\TestCase;
 
 class APIEditTest extends TestCase {
 	public function testEdit() {
-		$edit = new \HclearBot\APIEdit();
-		$result = $edit->doEdit( 'WP:沙盒', 'test', '测试' );
+		$result = ( new \HclearBot\APIEdit() )->doEdit( 'WP:沙盒', 'test', '测试' );
 		$expected = 'Success';
 		$this->assertEquals( $expected, $result['edit']['result'] );
 	}

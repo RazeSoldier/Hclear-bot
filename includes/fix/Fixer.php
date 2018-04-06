@@ -41,10 +41,10 @@ abstract class Fixer {
 	 */
 	static protected function logging(array $data) {
 		if ( isset( $data['sendResult']['edit']['result'] ) ) {
-			if ( $data['sendResult']['edit']['result'] === 'Success' ) {
+			if ( isset( $data['sendResult']['edit']['nochange'] ) ) {
+				$result = 'Without diff';
+			} elseif ( $data['sendResult']['edit']['result'] === 'Success' ) {
 				$result = 'Success';
-			} elseif ( isset( $data['sendResult']['edit']['nochange'] ) ) {
-				$result = 'without diff';
 			} else {
 				$result = $data['sendResult']['edit']['result'];
 			}
@@ -54,7 +54,7 @@ abstract class Fixer {
 		if ( !empty( $data['queryResult']['templateInfo'] ) ) {
 			if ( !isset( $data['queryResult']['templateInfo']['multiPartTemplateBlock'] ) ) {
 				$isViaTemplateOutput = $data['queryResult']['templateInfo']['name'];
-				} else {
+			} else {
 				$isViaTemplateOutput = 'multiPartTemplateOutput';
 			}
 		} else {

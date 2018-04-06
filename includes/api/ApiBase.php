@@ -49,4 +49,12 @@ abstract class ApiBase {
 	protected function spliceApiURL(string $suffix, string $wiki) {
 		return $this->apiURLPrefix[$wiki] . '?' . $suffix;
 	}
+
+	/**
+	 * Get $this->apiResponseData
+	 * @return array
+	 */
+	public function getData() {
+		return $this->apiResponseData;
+	}
 }

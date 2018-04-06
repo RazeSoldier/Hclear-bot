@@ -39,8 +39,9 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 
 	private function main(array $data) {
 		if ( !empty( $data['templateInfo'] ) ) {
-			// Ignore, if the output does not come from a single template
-			if ( !isset( $data['templateInfo']['multiPartTemplateBlock'] ) ) {
+			if ( isset( $data['templateInfo']['multiPartTemplateBlock'] ) ) {
+				$this->handleMultiTemplateError( $data );
+			} else {
 				$this->handleTemplateError( $data['templateInfo']['name'] );
 			}
 		}
@@ -49,9 +50,33 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		$tidy = new CloseFormatTag( $text, $data['params']['name'] );
 		$result = $this->replaceStr( $revision->getContent(), $tidy->doClose(),
 				$data['location'][0], $data['location'][1] );
-		$edit = new APIEdit();
-		$send = $edit->doEdit($data['pageid'], $result, 'Fix multiple-unclosed-formatting-tags error');
+		$send = ( new APIEdit() )->doEdit($data['pageid'], $result, 'Fix multiple-unclosed-formatting-tags error');
 		var_dump(parent::logging( [ 'queryResult' => $data, 'sendResult' => $send ] ));
+	}
+
+	private function handleMultiTemplateError(array $data) {
+		var_dump($data);
+		$revision = new APIRevisions( $data['pageid'] );
+		$text = $this->catchHTML( $revision->getContent(), $data['location'][0], $data['location'][1] );
+		$templateList = $this->catchTemplateName( $text );
+		$pageids = new APIPage( 'title', $templateList );
+		foreach( $pageids->getData()['query']['pages'] as $page ) {
+			$pageList[] = $page['pageid'];
+		}
+
+		$apier = new APIMultipleUnclosedFormattingTags( 'list', $pageList );
+		var_dump($apier);die;
+		foreach( $templateList as $value ) {
+			$apier = new APIMultipleUnclosedFormattingTags( 'list',
+					( new APIRevisions( rawurlencode( $value ), true ) )->getPageID() );
+			if ( !isset( $apier->getData()['query']['linterrors'] ) ) {
+				continue;
+			}
+			foreach ( $apier->getData()['query']['linterrors'] as $value ) {
+				$this->main( $value );
+			}
+			unset( $apier );
+		}
 	}
 
 	private function handleTemplateError(string $templateName) {
@@ -77,5 +102,20 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		$start = mb_substr( $input, 0, $startOffset );
 		$end = mb_substr( $input, $endOffset );
 		return $start . $replacement . $end;
+	}
+
+	/**
+	 * Capture all template names from $text (wikitext)
+	 * @param string $text
+	 * @return array
+	 */
+	private function catchTemplateName(string $text) {
+		$pattern1 = '/{{(?<name>((?!\|).)*)([\|]?.*)?}}/';
+		preg_match_all( $pattern1, $text, $matches );
+		$pattern2 = '/^[T|t]emplate:/';
+		foreach( $matches['name'] as $value ) {
+			$returnValue[] = 'Template:' . preg_replace( $pattern2, null, $value );
+		}
+		return $returnValue;
 	}
 }

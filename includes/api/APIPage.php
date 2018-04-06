@@ -1,6 +1,6 @@
 <?php
 /**
- * Revisions API
+ * Used to query basic information for pages
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,32 +22,32 @@
 
 namespace HclearBot;
 
-class APIRevisions extends ApiBase {
-	public function __construct($pageName, bool $titleOption = false) {
-		if ( $titleOption ) {
-			$this->apiURL = $this->spliceApiURL( 'action=query&format=json&prop=revisions'
-				. "&titles={$pageName}&formatversion=2&rvprop=content&converttitles=1", 'zhwiki' );
+class APIPage extends ApiBase {
+	/**
+	 * @param string $queryMode Allow value: title or pageid
+	 * @param string|int|array $pages
+	 */
+	public function __construct(string $queryMode, $pages) {
+		if ( is_array( $pages ) ) {
+			$queryValue = null;
+			foreach( $pages as $value ) {
+				if ( $queryValue === null ) {
+					$queryValue = rawurlencode( $value );
+				} else {
+					$queryValue = $queryValue . '|' . rawurlencode( $value );
+				}
+			}
 		} else {
-			$this->apiURL = $this->spliceApiURL( 'action=query&format=json&prop=revisions'
-				. "&pageids={$pageName}&formatversion=2&rvprop=content", 'zhwiki' );
+			$queryValue = rawurlencode( $pages );
+		}
+		if ( $queryMode === 'title' ) {
+			$this->apiURL = $this->spliceApiURL( 'action=query&format=json&formatversion=2'
+				. "&titles={$queryValue}&converttitles=1", 'zhwiki' );
+		} elseif ( $queryMode === 'pageid' ) {
+			$this->apiURL = $this->spliceApiURL( 'action=query&format=json&formatversion=2'
+				. "&pageids={$queryValue}&converttitles=1", 'zhwiki' );
 		}
 		$c = new CurlConnector( $this->apiURL );
 		$this->apiResponseData = jsonToArray( $c->get() );
-	}
-
-	/**
-	 * Get revision content
-	 * @return string
-	 */
-	public function getContent() {
-		return $this->apiResponseData['query']['pages'][0]['revisions'][0]['content'];
-	}
-
-	/**
-	 * Get page ID
-	 * @retuan int
-	 */
-	public function getPageID() {
-		return $this->apiResponseData['query']['pages'][0]['pageid'];
 	}
 }
