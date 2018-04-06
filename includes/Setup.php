@@ -46,6 +46,9 @@ require_once APP_PATH . '/vendor/autoload.php';
 
 require_once APP_PATH . '/includes/GlobalFunctions.php';
 
+# Using set_error_handler() to error messages to ErrorException
+set_error_handler( 'HclearBot\exception_error_handler' );
+
 require_once APP_PATH . '/includes/Core.php';
 
 HclearBot\Core::oauthAuthorize();

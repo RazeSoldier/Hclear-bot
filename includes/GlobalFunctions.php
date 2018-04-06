@@ -47,3 +47,15 @@ function findSubStr(string $str, string $find, int $count, int $offset = 0) {
 	}
 	return $pos;
 }
+
+/**
+ * A user-defined error handler function
+ * @param int $errno
+ * @param string $errstr
+ * @param string $errfile
+ * @param int  $errline
+ * @throws ErrorException
+ */
+function exception_error_handler(int $errno, string $errstr,string $errfile, int $errline) {
+    throw new ErrorException( $errstr, 0, $errno, $errfile, $errline );
+}
