@@ -53,6 +53,20 @@ class CloseFormatTagTest extends TestCase {
 		$this->assertEquals( $expected, $tidy->doClose() );
 	}
 
+	public function testScenario2_3() {
+		$str = '<u>test<u>foo<u>game<u>why</u>end';
+		$expected = '<u>testfoogamewhy</u>end';
+		$tidy = new \HclearBot\CloseFormatTag( $str, 'u' );
+		$this->assertEquals( $expected, $tidy->doClose() );
+	}
+
+	public function testScenario2_4() {
+		$str = '（[[Q-1签证 (美国)|Q-1]]）{{·}}<u>宗教工作者<u>（[[R-1签证 (美国)|R-1]]{{·}}[[R-2签证 (美国)|R-2]]）{{·}}<u>法庭证人<u>（[[S签证 (美国)|S-1]]）{{·}}<u>人口贩运受害者</u>（[[T签证 (美国)|T-1]]{{·}}[[T签证 (美国)|T-2]][[T签证 (美国)|T-3]]{{·}}[[T签证 (美国)|T-4]]）{{·}}<u>北美自由贸易协议</u>（[[TD签证 (美国)|TD]]{{·}}[[TN身份 (美国)|TN]]）{{·}}<u>犯罪受害者</u>（[[U签证 (美国)|U-1]]{{·}}[[U签证 (美国)|U-2]]{{·}}[[U签证 (美国)|U-3]]{{·}}[[U签证 (美国)|U-4]]）{{·}}<u>美国永久居民的亲属</u>（[[V签证 (美国)|V-1]]{{·}}[[V签证 (美国)|V-2]]{{·}}[[V签证 (美国)|V-3]]）{{·}}<u>其他</u>（[[免签证计划]]）';
+		$expected = '（[[Q-1签证 (美国)|Q-1]]）{{·}}<u>宗教工作者</u>（[[R-1签证 (美国)|R-1]]{{·}}[[R-2签证 (美国)|R-2]]）{{·}}<u>法庭证人</u>（[[S签证 (美国)|S-1]]）{{·}}<u>人口贩运受害者</u>（[[T签证 (美国)|T-1]]{{·}}[[T签证 (美国)|T-2]][[T签证 (美国)|T-3]]{{·}}[[T签证 (美国)|T-4]]）{{·}}<u>北美自由贸易协议</u>（[[TD签证 (美国)|TD]]{{·}}[[TN身份 (美国)|TN]]）{{·}}<u>犯罪受害者</u>（[[U签证 (美国)|U-1]]{{·}}[[U签证 (美国)|U-2]]{{·}}[[U签证 (美国)|U-3]]{{·}}[[U签证 (美国)|U-4]]）{{·}}<u>美国永久居民的亲属</u>（[[V签证 (美国)|V-1]]{{·}}[[V签证 (美国)|V-2]]{{·}}[[V签证 (美国)|V-3]]）{{·}}<u>其他</u>（[[免签证计划]]）';
+		$tidy = new \HclearBot\CloseFormatTag( $str, 'u' );
+		$this->assertEquals( $expected, $tidy->doClose() );
+	}
+
 	public function testLoop() {
 		$str = '<u>miss<u>ed all<u> my H</u>istory lectures. You have <u>w<u>asted a whole <u>t</u>erm.';
 		$expected = '<u>miss</u>ed all<u> my H</u>istory lectures. You have <u>w</u>asted a whole <u>t</u>erm.';

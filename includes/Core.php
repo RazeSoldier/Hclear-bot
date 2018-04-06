@@ -48,8 +48,5 @@ class Core {
 
 		$GLOBALS['gClient'] = new Client( $conf );
 		$GLOBALS['gAccessToken'] = new Token( $gAccessKey, $gAccessSecret );
-
-		$ident = $GLOBALS['gClient']->identify( $GLOBALS['gAccessToken'] );
-		echo "Authenticated user: {$ident->username}\n";
 	}
 }

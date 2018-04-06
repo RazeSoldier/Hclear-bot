@@ -133,9 +133,16 @@ class CloseFormatTag {
 					$startTagOffset + $this->tagLen['startTag'], $endTagOffset );
 			$result['diff'] = $text->strLen - $withoutStartTag->strLen;
 		} elseif ( $count % 2 === 0 ) {
-			// Close the second tag
-			$firstTagOffset = mb_strpos( $text, $this->tag['start'] );
-			$fixedStr = new TextNode( $this->closeTag( $text, $firstTagOffset ) );
+			$preText = $text;
+			for($i = 1; $i < $count;) {
+				$pos = $i;
+				if ( $pos !== 1 ) {
+					$pos--;
+				}
+				$preText = $this->closeTag( $preText, findSubStr( $preText, $this->tag['start'], $pos ) );
+				$i = $i + 2;
+			}
+			$fixedStr = new TextNode( $preText );
 			$result['text'] = $this->replaceStr( $needCheckText, $fixedStr,
 					$startTagOffset + $this->tagLen['startTag'], $endTagOffset );
 			$result['diff'] = $fixedStr->strLen - $text->strLen;
