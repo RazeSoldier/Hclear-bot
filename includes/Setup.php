@@ -29,6 +29,11 @@ if ( PHP_SAPI !== 'cli' ) {
 	die( 1 );
 }
 
+# Verify the version for PHP, requires PHP version 7.0 or later
+if ( version_compare( PHP_VERSION, '7.0.0', '<' ) ) {
+	trigger_error( "Hclear-bot requires PHP version 7.0 or later\n", E_USER_ERROR );
+}
+
 if ( !extension_loaded( 'curl' ) ) {
 	trigger_error( "cURL extension is not available.\n", E_USER_ERROR );
 }
