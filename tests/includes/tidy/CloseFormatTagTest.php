@@ -118,4 +118,21 @@ class CloseFormatTagTest extends TestCase {
 		$tidy = new \HclearBot\CloseFormatTag( $str, 'small' );
 		$this->assertEquals( $expected, $tidy->doClose() );
 	}
+
+	public function testMultiLine() {
+		$str = <<<str
+|[[FUNKY MONKEY BABYS 1]]
+|<small>DJ Chemical<small>
+|-
+|<small>2nd</small>
+str;
+		$expected = <<<str
+|[[FUNKY MONKEY BABYS 1]]
+|<small>DJ Chemical</small>
+|-
+|<small>2nd</small>
+str;
+		$tidy = new \HclearBot\CloseFormatTag( $str, 'small' );
+		$this->assertEquals( $expected, $tidy->doClose() );
+	}
 }

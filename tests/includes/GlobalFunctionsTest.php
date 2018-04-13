@@ -1,6 +1,6 @@
 <?php
 /**
- * Used to test Cache class
+ * 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,33 +24,18 @@ namespace HclearBot\test;
 
 use PHPUnit\Framework\TestCase;
 
-class CacheTest extends TestCase {
-	/**
-	 * Test if Cache object can write a string to a cache file
-	 */
-	public function testWrite() {
-		$testFileName = 'test';
-		$cache = new \HclearBot\Cache( $testFileName );
-		$text = 'This is a test.';
-
-		$this->assertEquals( true, $cache->write( $text ) );
-		$this->assertEquals( $text, file_get_contents( $cache->cacheFilePath ) );
-
-		$cache->destruct();
-		unlink( $cache->cacheFilePath );
-	}
-
-	/**
-	 * Test if Cache object can read a string to a cache file
-	 */
-	public function testRead() {
-		$text = 'Please read it.';
-		file_put_contents( APP_PATH . '/storage/test', $text );
-
-		$cache = new \HclearBot\Cache( 'test' );
-		$this->assertEquals( $text, $cache->read() );
-
-		$cache->destruct();
-		unlink( $cache->cacheFilePath );
+class TestGlobalFuntions extends TestCase {
+	public function testBranchLine() {
+		$text = <<<TEXT
+line 1
+line 2
+    line 3
+TEXT;
+		$expected = [
+			'line 1',
+			'line 2',
+			'    line 3'
+		];
+		$this->assertEquals( $expected, \HclearBot\branchLine( $text ) );
 	}
 }
