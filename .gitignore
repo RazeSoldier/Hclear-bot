@@ -1,6 +1,9 @@
 # Configuration
 /config.php
 
+# Temporary directory
+/storage/*
+
 # NetBeans IDE
 /nbproject/*
 
