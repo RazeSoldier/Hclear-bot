@@ -29,7 +29,7 @@ class Cache {
 	public $cacheFileName;
 
 	/**
-	 * @var resource The resource returned by fopen()
+	 * @var object SplFileObject
 	 */
 	private $cacheFile;
 
@@ -59,7 +59,7 @@ class Cache {
 			}
 		}
 
-		$this->cacheFile = fopen( $this->cacheFilePath, 'a+b' );
+		$this->cacheFile = new \SplFileObject( $this->cacheFilePath, 'a+b' );
 	}
 
 	/**
@@ -68,7 +68,8 @@ class Cache {
 	 * @return bool
 	 */
 	public function write(string $text) {
-		if ( fwrite( $this->cacheFile, $text ) === false ) {
+		$this->cacheFile->ftruncate( 0 );
+		if ( $this->cacheFile->fwrite( $text ) === false ) {
 			trigger_error( "Failed to write {$this->cacheFilePath}", E_USER_WARNING );
 		}
 		return true;
@@ -79,15 +80,17 @@ class Cache {
 	 * @return string|false All contents of the cache file
 	 */
 	public function read() {
-		return fread( $this->cacheFile, filesize( $this->cacheFilePath ) );
+		if ( $this->cacheFile->getSize() === 0 ) {
+			return '';
+		} else {
+			return $this->cacheFile->fread( $this->cacheFile->getSize() );
+		}
 	}
 
 	/**
-	 * Close Cache::$cacheFile resource
+	 * Destroy Cache::$cacheFile object
 	 */
-	public function __destruct() {
-		if ( is_resource( $this->cacheFile ) ) {
-			fclose( $this->cacheFile );
-		}
+	public function destruct() {
+		unset( $this->cacheFile );
 	}
 }

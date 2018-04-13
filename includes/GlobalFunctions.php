@@ -59,3 +59,12 @@ function findSubStr(string $str, string $find, int $count, int $offset = 0) {
 function exception_error_handler(int $errno, string $errstr,string $errfile, int $errline) {
     throw new \ErrorException( $errstr, 0, $errno, $errfile, $errline );
 }
+
+/**
+ * Split a string by line
+ * @param string $text
+ * @return array
+ */
+function branchLine(string $text) : array {
+	return mb_split( '\n', $text );
+}

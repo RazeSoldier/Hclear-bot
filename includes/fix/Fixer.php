@@ -71,4 +71,18 @@ abstract class Fixer {
 		}
 		return $returnValue;
 	}
+
+	
+	protected function writeCache(string $filename, string $data) {
+		$cache = new Cache( $filename );
+		$cache->write( $data );
+		unset( $cache );
+	}
+
+	protected function readCache(string $filename) {
+		$cache = new Cache( $filename );
+		$returnValue = $cache->read();
+		unset( $cache );
+		return $returnValue;
+	}
 }

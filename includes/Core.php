@@ -40,8 +40,15 @@ class Core {
 
 	static public function oauthAuthorize() {
 		global $gConsumerKey, $gConsumerSecret, $gAccessKey, $gAccessSecret;
+		if ( empty( $gConsumerKey )
+				|| empty( $gConsumerSecret )
+				|| empty( $gAccessKey )
+				|| empty( $gAccessSecret )
+		) {
+			trigger_error( 'Missing configuration', E_USER_ERROR );
+		}
 		$endpoint = 'https://zh.wikipedia.org/w/index.php?title=Special:OAuth';
-		$redir = 'https://zh.wikipedia.org/w/Special:OAuth?';
+		$redir = 'https://zh.wikipedia.org/w/index.php?title=Special:OAuth?';
 		$conf = new ClientConfig( $endpoint );
 		$conf->setRedirURL( $redir );
 		$conf->setConsumer( new Consumer( $gConsumerKey, $gConsumerSecret ) );

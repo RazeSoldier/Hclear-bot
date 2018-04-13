@@ -26,22 +26,22 @@ class APIMultipleUnclosedFormattingTags extends ApiBase {
 	public function __construct(string $query, $extra) {
 		switch ( $query ) {
 			case 'batch':
-				if ( !is_int( $extra ) ) {
-					throw new \RuntimeException( '$extra is not an integer.' );
+				if ( !is_array( $extra ) ) {
+					throw new \RuntimeException( '$extra is not an array.', 104 );
 				}
 				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
-				. "&lntcategories=multiple-unclosed-formatting-tags&lntlimit={$extra}", 'zhwiki' );
+				. "&lntcategories=multiple-unclosed-formatting-tags&lntlimit={$extra['limit']}&lntfrom={$extra['from']}", 'zhwiki' );
 				break;
 			case 'alone':
 				if ( !is_int( $extra ) ) {
-					throw new \RuntimeException( '$extra is not an integer.' );
+					throw new \RuntimeException( '$extra is not an integer.', 103 );
 				}
 				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
 				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$extra}", 'zhwiki' );
 				break;
 			case 'list':
 				if ( !is_array( $extra ) ) {
-					throw new \RuntimeException( '$extra is not an array.' );
+					throw new \RuntimeException( '$extra is not an array.', 104 );
 				}
 				$queryList = null;
 				foreach( $extra as $value ) {

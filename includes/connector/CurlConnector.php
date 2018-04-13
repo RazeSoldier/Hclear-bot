@@ -73,8 +73,7 @@ class CurlConnector {
 		$this->main();
 		$result = curl_exec( $this->curlResource );
 		if ( $result === false ) {
-			trigger_error( "Download failed: Can't get something from {$this->url}", E_USER_WARNING );
-			return false;
+			throw new \RuntimeException( "Download failed: Can't get something from {$this->url}", 100 );
 		}
 		return $result;
 	}
@@ -85,8 +84,7 @@ class CurlConnector {
 		curl_setopt( $this->curlResource, CURLOPT_POSTFIELDS, $postData );
 		$result = curl_exec( $this->curlResource );
 		if ( $result === false ) {
-			trigger_error( "Post failed: Can't post something to {$this->url}", E_USER_WARNING );
-			return false;
+			throw new \RuntimeException( "Post failed: Can't post something to {$this->url}", 101 );
 		}
 		return $result;
 	}

@@ -32,22 +32,32 @@ class APIPage extends ApiBase {
 			$queryValue = null;
 			foreach( $pages as $value ) {
 				if ( $queryValue === null ) {
-					$queryValue = rawurlencode( $value );
+					$queryValue = $value;
 				} else {
-					$queryValue = $queryValue . '|' . rawurlencode( $value );
+					$queryValue = $queryValue . '|' . $value;
 				}
 			}
 		} else {
-			$queryValue = rawurlencode( $pages );
+			$queryValue = $pages;
 		}
 		if ( $queryMode === 'title' ) {
-			$this->apiURL = $this->spliceApiURL( 'action=query&format=json&formatversion=2'
-				. "&titles={$queryValue}&converttitles=1", 'zhwiki' );
+			$postData = [
+				'action' => 'query',
+				'format' => 'json',
+				'formatversion' => 2,
+				'titles' => $queryValue,
+				'converttitles' => 1
+			];
 		} elseif ( $queryMode === 'pageid' ) {
-			$this->apiURL = $this->spliceApiURL( 'action=query&format=json&formatversion=2'
-				. "&pageids={$queryValue}&converttitles=1", 'zhwiki' );
+			$postData = [
+				'action' => 'query',
+				'format' => 'json',
+				'formatversion' => 2,
+				'pageids' => $queryValue,
+				'converttitles' => 1
+			];
 		}
-		$c = new CurlConnector( $this->apiURL );
-		$this->apiResponseData = jsonToArray( $c->get() );
+		$c = new CurlConnector( $this->apiURLPrefix['zhwiki'] );
+		$this->apiResponseData = jsonToArray( $c->post( $postData ) );
 	}
 }

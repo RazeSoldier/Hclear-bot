@@ -38,6 +38,9 @@ if ( !extension_loaded( 'mbstring' ) ) {
 
 mb_internal_encoding( 'UTF-8' );
 
+if ( !is_readable( APP_PATH . '/config.php' ) ) {
+	trigger_error( 'Unable to read configuration file or the file does not exist', E_USER_ERROR );
+}
 require_once APP_PATH . '/config.php';
 
 require_once APP_PATH .'/includes/AutoLoader.php';
