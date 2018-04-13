@@ -26,6 +26,7 @@ return [
 	'APIMultipleUnclosedFormattingTags' => APP_PATH . '/includes/api/APIMultipleUnclosedFormattingTags.php',
 	'APIPage' => APP_PATH . '/includes/api/APIPage.php',
 	'APIRevisions' => APP_PATH . '/includes/api/APIRevisions.php',
+	'Cache' => APP_PATH . '/includes/Cache.php',
 	'CloseFormatTag' => APP_PATH . '/includes/tidy/CloseFormatTag.php',
 	'CurlConnector' => APP_PATH . '/includes/connector/CurlConnector.php',
 	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
