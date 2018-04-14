@@ -27,7 +27,7 @@ namespace HclearBot;
  * @param string $jsonData
  * @return array
  */
-function jsonToArray(string $jsonData) {
+function jsonToArray(string $jsonData) : array {
 	return json_decode( $jsonData, true );
 }
 
@@ -39,7 +39,7 @@ function jsonToArray(string $jsonData) {
  * @param int $offset
  * @return int
  */
-function findSubStr(string $str, string $find, int $count, int $offset = 0) {
+function findSubStr(string $str, string $find, int $count, int $offset = 0) : int {
 	$pos = mb_stripos( $str, $find, $offset );
 	$count--;
 	if ( $count > 0 && $pos !== false ) {
@@ -53,7 +53,7 @@ function findSubStr(string $str, string $find, int $count, int $offset = 0) {
  * @param int $errno
  * @param string $errstr
  * @param string $errfile
- * @param int  $errline
+ * @param int $errline
  * @throws ErrorException
  */
 function exception_error_handler(int $errno, string $errstr,string $errfile, int $errline) {
