@@ -1,6 +1,6 @@
 <?php
 /**
- * A base class
+ * The base class of the subclass used to repair lint errors
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ abstract class Fixer {
 	 * @param int $end
 	 * @return string
 	 */
-	protected function catchHTML(string $input, int $start, int $end) {
+	protected function catchHTML(string $input, int $start, int $end) : string {
 		return mb_substr( $input, $start, $end - $start );
 	}
 
@@ -72,14 +72,23 @@ abstract class Fixer {
 		return $returnValue;
 	}
 
-	
+	/**
+	 * Write a string to a cache file
+	 * @param string $filename The filename of a cache file
+	 * @param string $data A string need to be cached
+	 */
 	protected function writeCache(string $filename, string $data) {
 		$cache = new Cache( $filename );
 		$cache->write( $data );
 		unset( $cache );
 	}
 
-	protected function readCache(string $filename) {
+	/**
+	 * Read a string from a cache file
+	 * @param string $filename The filename of a cache file
+	 * @return string The cached string
+	 */
+	protected function readCache(string $filename) : string {
 		$cache = new Cache( $filename );
 		$returnValue = $cache->read();
 		unset( $cache );
