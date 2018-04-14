@@ -22,6 +22,11 @@
 
 namespace HclearBot;
 
+/**
+ * The base class of the subclass used to repair lint errors
+ *
+ * @class
+ */
 abstract class Fixer {
 	/**
 	 * Used to catch HTML

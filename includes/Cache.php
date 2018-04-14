@@ -22,6 +22,11 @@
 
 namespace HclearBot;
 
+/**
+ * The class that used to cache a string to a file and read it
+ *
+ * @class
+ */
 class Cache {
 	/**
 	 * @var string

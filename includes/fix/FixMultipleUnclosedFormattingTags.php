@@ -22,15 +22,36 @@
 
 namespace HclearBot;
 
+/**
+ * The fixer that used to fix multiple-unclosed-formatting-tags lint errors
+ *
+ * @class
+ */
 class FixMultipleUnclosedFormattingTags extends Fixer {
+	/**
+	 * Used to store a list of pages that contain lint error messages
+	 * @var array
+	 */
 	private $errorList;
 
+	/**
+	 * Initialize a FixMultipleUnclosedFormattingTags object
+	 * First, read the mess left by the previous transaction from the cache
+	 * Then, query the lint error list from the API
+	 *
+	 * @return object FixMultipleUnclosedFormattingTags
+	 */
 	public function __construct() {
 		$lntfrom = (int)$this->readCache( 'lntfrom' );
 		$api = new APIMultipleUnclosedFormattingTags( 'batch', ['limit' => 20, 'from' => $lntfrom] );
 		$this->errorList = $api->getData()['query']['linterrors'];
 	}
 
+	/**
+	 * Run this fixer
+	 *
+	 * @return null
+	 */
 	public function execute() {
 		$count = count( $this->errorList );
 		for ( $i = 0; $i < $count; $i++ ) {
@@ -38,18 +59,27 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		}
 	}
 
+	/**
+	 * Fix a page
+	 * @param array $data The error message of a page
+	 */
 	private function main(array $data) {
+		// Whether the wrong field is output through the template
 		if ( !empty( $data['templateInfo'] ) ) {
+			// Whether the wrong field is output through multiple templates
 			if ( isset( $data['templateInfo']['multiPartTemplateBlock'] ) ) {
 				$this->handleMultiTemplateError( $data );
 			} else {
 				$this->handleTemplateError( $data['templateInfo']['name'] );
 			}
 		}
+
+		// Do fix
 		$revision = new APIRevisions( $data['pageid'] );
 		$text = $this->catchHTML( $revision->getContent(), $data['location'][0], $data['location'][1] );
 		$result = $this->replaceStr( $revision->getContent(), $this->loopBranchLine( $text, $data['params']['name'] ),
 				$data['location'][0], $data['location'][1] );
+
 		$send = ( new APIEdit() )->doEdit($data['pageid'], $result, 'Fix multiple-unclosed-formatting-tags error' );
 		$this->writeCache( 'lntfrom', $data['lintId'] );
 		var_dump(parent::logging( [ 'queryResult' => $data, 'sendResult' => $send ] ));
@@ -70,6 +100,11 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		return $returnValue;
 	}
 
+	/**
+	 * Used to handle the error field that are output from multiple templates
+	 * @param array $data The parameter that passed to main()
+	 * @return null
+	 */
 	private function handleMultiTemplateError(array $data) {
 		$revision = new APIRevisions( $data['pageid'] );
 		$text = $this->catchHTML( $revision->getContent(), $data['location'][0], $data['location'][1] );
@@ -89,6 +124,11 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		unset( $revision, $pageids, $apiData );
 	}
 
+	/**
+	 * Used to handle the error field that are output from a template
+	 * @param string $templateName The name of the template that contain lint errors
+	 * @return null
+	 */
 	private function handleTemplateError(string $templateName) {
 		$revision = new APIRevisions( $templateName, true );
 		$apier = new APIMultipleUnclosedFormattingTags( 'alone', $revision->getPageID() );
