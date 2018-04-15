@@ -46,10 +46,6 @@ class Curl {
 		$this->curlResource = curl_init( $this->url );
 	}
 
-	private function main() {
-		$this->setCurlOption();
-	}
-
 	/**
 	 * Set some option for a cURL transfer
 	 * @return null
@@ -66,11 +62,12 @@ class Curl {
 
 	/**
 	 * GET HTTP method
-	 * @return string|bool
+	 * @return string
+	 * @throws \RuntimeException
 	 */
 	public function get() {
 		$this->mode = 'GET';
-		$this->main();
+		$this->setCurlOption();
 		$result = curl_exec( $this->curlResource );
 		if ( $result === false ) {
 			throw new \RuntimeException( "Download failed: Can't get something from {$this->url}", 100 );
@@ -78,9 +75,15 @@ class Curl {
 		return $result;
 	}
 
-	public function post(array $postData) {
+	/**
+	 * POST HTTP method
+	 * @param array $postData
+	 * @return string
+	 * @throws \RuntimeException
+	 */
+	public function post(array $postData = null) {
 		$this->mode = 'POST';
-		$this->main();
+		$this->setCurlOption();
 		curl_setopt( $this->curlResource, CURLOPT_POSTFIELDS, $postData );
 		$result = curl_exec( $this->curlResource );
 		if ( $result === false ) {
