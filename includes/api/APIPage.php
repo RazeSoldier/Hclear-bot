@@ -57,7 +57,7 @@ class APIPage extends ApiBase {
 				'converttitles' => 1
 			];
 		}
-		$c = new CurlConnector( $this->apiURLPrefix['zhwiki'] );
+		$c = new Curl( $this->apiURLPrefix['zhwiki'] );
 		$this->apiResponseData = jsonToArray( $c->post( $postData ) );
 	}
 }

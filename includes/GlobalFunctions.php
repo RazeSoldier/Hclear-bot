@@ -26,9 +26,15 @@ namespace HclearBot;
  * Used to convert JSON to an array
  * @param string $jsonData
  * @return array
+ * @throws \RuntimeException
  */
 function jsonToArray(string $jsonData) : array {
-	return json_decode( $jsonData, true );
+	$arr = json_decode( $jsonData, true );
+	$errorMsg = json_last_error_msg();
+	if ( $errorMsg !== 'No error' ) {
+		throw new \RuntimeException( 'Json encoding failed: ' .  $errorMsg );
+	}
+	return $arr;
 }
 
 /**

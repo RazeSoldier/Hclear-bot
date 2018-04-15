@@ -22,7 +22,7 @@
 
 namespace HclearBot;
 
-class CurlConnector {
+class Curl {
 	/**
 	 * @var string Link of resource you want
 	 */

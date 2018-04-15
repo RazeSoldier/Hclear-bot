@@ -28,7 +28,7 @@ return [
 	'APIRevisions' => APP_PATH . '/includes/api/APIRevisions.php',
 	'Cache' => APP_PATH . '/includes/Cache.php',
 	'CloseFormatTag' => APP_PATH . '/includes/tidy/CloseFormatTag.php',
-	'CurlConnector' => APP_PATH . '/includes/connector/CurlConnector.php',
+	'Curl' => APP_PATH . '/includes/connector/Curl.php',
 	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
 	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
 	'TextNode' => APP_PATH . '/includes/tidy/TextNode.php'

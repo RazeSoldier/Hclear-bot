@@ -56,7 +56,7 @@ class APIMultipleUnclosedFormattingTags extends ApiBase {
 				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$queryList}", 'zhwiki' );
 				break;
 		}
-		$c = new CurlConnector( $this->apiURL );
+		$c = new Curl( $this->apiURL );
 		$this->apiResponseData = jsonToArray( $c->get() );
 	}
 }

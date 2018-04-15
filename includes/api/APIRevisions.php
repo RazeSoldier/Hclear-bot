@@ -31,7 +31,7 @@ class APIRevisions extends ApiBase {
 			$this->apiURL = $this->spliceApiURL( 'action=query&format=json&prop=revisions'
 				. "&pageids={$pageName}&formatversion=2&rvprop=content", 'zhwiki' );
 		}
-		$c = new CurlConnector( $this->apiURL );
+		$c = new Curl( $this->apiURL );
 		$this->apiResponseData = jsonToArray( $c->get() );
 	}
 
