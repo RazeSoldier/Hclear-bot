@@ -69,6 +69,7 @@ class Curl {
 		$this->mode = 'GET';
 		$this->setCurlOption();
 		$result = curl_exec( $this->curlResource );
+		curl_reset( $this->curlResource );
 		if ( $result === false ) {
 			throw new \RuntimeException( "Download failed: Can't get something from {$this->url}", 100 );
 		}
@@ -86,6 +87,7 @@ class Curl {
 		$this->setCurlOption();
 		curl_setopt( $this->curlResource, CURLOPT_POSTFIELDS, $postData );
 		$result = curl_exec( $this->curlResource );
+		curl_reset( $this->curlResource );
 		if ( $result === false ) {
 			throw new \RuntimeException( "Post failed: Can't post something to {$this->url}", 101 );
 		}
