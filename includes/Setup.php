@@ -48,7 +48,7 @@ if ( !is_readable( APP_PATH . '/config.php' ) ) {
 }
 require_once APP_PATH . '/config.php';
 
-require_once APP_PATH .'/includes/AutoLoader.php';
+require_once APP_PATH . '/includes/AutoLoader.php';
 
 require_once APP_PATH . '/vendor/autoload.php';
 
