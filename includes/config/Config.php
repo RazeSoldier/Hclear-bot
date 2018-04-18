@@ -28,7 +28,25 @@ class Config {
 	 */
 	public $authConfig;
 
+	/**
+	 * Initialize a Config object
+	 * @return object Config
+	 */
 	public function __construct() {
 		$this->authConfig = new OAuthConfig();
+	}
+
+	/**
+	 * Check if these config is empty
+	 * If a config is empty, a fatal error is thrown
+	 * @param array $needCheckConfig Need to check config
+	 * @return null
+	 */
+	protected function checkIsSet(array $needCheckConfig) {
+		foreach( $needCheckConfig as $key => $value ) {
+			if ( empty( $value ) ) {
+				trigger_error( "Missing {$key} configuration", E_USER_ERROR );
+			}
+		}
 	}
 }

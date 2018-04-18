@@ -22,12 +22,16 @@
 
 namespace HclearBot;
 
-class OAuthConfig {
+class OAuthConfig extends Config {
 	public $accessKey;
 	public $accessSecret;
 	public $consumerKey;
 	public $consumerSecret;
 
+	/**
+	 * Initialize a OAuthConfig object
+	 * @return object OAuthConfig
+	 */
 	public function __construct() {
 		global $gAccessKey, $gAccessSecret, $gConsumerKey, $gConsumerSecret;
 		$this->accessKey = $gAccessKey;
@@ -35,20 +39,12 @@ class OAuthConfig {
 		$this->consumerKey = $gConsumerKey;
 		$this->consumerSecret = $gConsumerSecret;
 
-		$this->checkIsSet();
-	}
-
-	private function checkIsSet() {
-		$needCheckValue = [
+		$needCheckConfig = [
 			'$gAccessKey' => $this->accessKey,
 			'$gAccessSecret' => $this->accessSecret,
 			'$gConsumerKey' => $this->consumerKey,
 			'$gConsumerSecret' => $this->consumerSecret
 		];
-		foreach( $needCheckValue as $key => $value ) {
-			if ( empty( $value ) ) {
-				trigger_error( "Missing {$key} configuration", E_USER_ERROR );
-			}
-		}
+		$this->checkIsSet( $needCheckConfig );
 	}
 }

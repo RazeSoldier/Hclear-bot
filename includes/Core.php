@@ -39,13 +39,14 @@ class Core {
 	}
 
 	static public function oauthAuthorize() {
+		global $gConfig;
 		$endpoint = 'https://zh.wikipedia.org/w/index.php?title=Special:OAuth';
 		$redir = 'https://zh.wikipedia.org/w/index.php?title=Special:OAuth?';
 		$conf = new ClientConfig( $endpoint );
 		$conf->setRedirURL( $redir );
-		$conf->setConsumer( new Consumer( $gConsumerKey, $gConsumerSecret ) );
+		$conf->setConsumer( new Consumer( $gConfig->authConfig->consumerKey, $gConfig->authConfig->consumerSecret ) );
 
 		$GLOBALS['gClient'] = new Client( $conf );
-		$GLOBALS['gAccessToken'] = new Token( $gAccessKey, $gAccessSecret );
+		$GLOBALS['gAccessToken'] = new Token( $gConfig->authConfig->accessKey, $gConfig->authConfig->accessSecret );
 	}
 }
