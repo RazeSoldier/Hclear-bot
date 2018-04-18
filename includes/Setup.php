@@ -57,6 +57,8 @@ require_once APP_PATH . '/includes/GlobalFunctions.php';
 # Using errorHandler() to error messages to ErrorException
 set_error_handler( 'HclearBot\errorHandler' );
 
+$gConfig = new \HclearBot\Config();
+
 require_once APP_PATH . '/includes/Core.php';
 
 HclearBot\Core::oauthAuthorize();

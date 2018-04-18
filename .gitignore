@@ -7,8 +7,8 @@
 # NetBeans IDE
 /nbproject/*
 
-# PhpStrom
-/.idea/*
+# PhpStrom IDE
+/.idea
 
 # Composer
 /vendor

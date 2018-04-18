@@ -1,6 +1,6 @@
 <?php
 /**
- * Bot core
+ * Used to handle config
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,30 +22,13 @@
 
 namespace HclearBot;
 
-use MediaWiki\OAuthClient\{
-	ClientConfig,
-	Consumer,
-	Client,
-	Token
-};
-
-class Core {
+class Config {
 	/**
-	 * Run bot
+	 * @var object OAuthConfig
 	 */
-	public function run() {
-		$obj = new FixMultipleUnclosedFormattingTags();
-		$obj->execute();
-	}
+	public $authConfig;
 
-	static public function oauthAuthorize() {
-		$endpoint = 'https://zh.wikipedia.org/w/index.php?title=Special:OAuth';
-		$redir = 'https://zh.wikipedia.org/w/index.php?title=Special:OAuth?';
-		$conf = new ClientConfig( $endpoint );
-		$conf->setRedirURL( $redir );
-		$conf->setConsumer( new Consumer( $gConsumerKey, $gConsumerSecret ) );
-
-		$GLOBALS['gClient'] = new Client( $conf );
-		$GLOBALS['gAccessToken'] = new Token( $gAccessKey, $gAccessSecret );
+	public function __construct() {
+		$this->authConfig = new OAuthConfig();
 	}
 }
