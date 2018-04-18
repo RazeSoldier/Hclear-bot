@@ -1,6 +1,6 @@
 <?php
 /**
- * Used to handle config
+ * Used to handle entry point config
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,37 +22,15 @@
 
 namespace HclearBot;
 
-class Config {
+class EntryConfig extends Config {
 	/**
-	 * @var OAuthConfig
+	 * @var string
 	 */
-	public $authConfig;
+	public $entryPoint;
 
-	/**
-	 * @var EntryConfig
-	 */
-	public $entryConfig;
-
-	/**
-	 * Initialize a Config object
-	 * @return Config
-	 */
 	public function __construct() {
-		$this->authConfig = new OAuthConfig();
-		$this->entryConfig = new EntryConfig();
-	}
-
-	/**
-	 * Check if these config is empty
-	 * If a config is empty, a fatal error is thrown
-	 * @param array $needCheckConfig Need to check config
-	 * @return null
-	 */
-	protected function checkIsSet(array $needCheckConfig) {
-		foreach( $needCheckConfig as $key => $value ) {
-			if ( empty( $value ) ) {
-				trigger_error( "Missing {$key} configuration", E_USER_ERROR );
-			}
-		}
+		global $gEntryPoint;
+		$this->entryPoint = $gEntryPoint;
+		$this->checkIsSet( ['$gEntryPoint' => $this->entryPoint] );
 	}
 }

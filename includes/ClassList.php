@@ -30,6 +30,7 @@ return [
 	'CloseFormatTag' => APP_PATH . '/includes/tidy/CloseFormatTag.php',
 	'Curl' => APP_PATH . '/includes/connector/Curl.php',
 	'Config' => APP_PATH . '/includes/config/Config.php',
+	'EntryConfig' => APP_PATH . '/includes/config/EntryConfig.php',
 	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
 	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
 	'OAuthConfig' => APP_PATH . '/includes/config/OAuthConfig.php',
