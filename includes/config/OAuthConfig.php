@@ -30,7 +30,7 @@ class OAuthConfig extends Config {
 
 	/**
 	 * Initialize a OAuthConfig object
-	 * @return object OAuthConfig
+	 * @return OAuthConfig
 	 */
 	public function __construct() {
 		global $gAccessKey, $gAccessSecret, $gConsumerKey, $gConsumerSecret;

@@ -30,7 +30,7 @@ class Config {
 
 	/**
 	 * Initialize a Config object
-	 * @return object Config
+	 * @return Config
 	 */
 	public function __construct() {
 		$this->authConfig = new OAuthConfig();
