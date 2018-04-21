@@ -48,13 +48,13 @@ if ( !is_readable( APP_PATH . '/config.php' ) ) {
 }
 require_once APP_PATH . '/config.php';
 
-require_once APP_PATH .'/includes/AutoLoader.php';
+require_once APP_PATH . '/includes/AutoLoader.php';
 
 require_once APP_PATH . '/vendor/autoload.php';
 
 require_once APP_PATH . '/includes/GlobalFunctions.php';
 
-# Using set_error_handler() to error messages to ErrorException
+# Using errorHandler() to error messages to ErrorException
 set_error_handler( 'HclearBot\errorHandler' );
 
 require_once APP_PATH . '/includes/Core.php';
