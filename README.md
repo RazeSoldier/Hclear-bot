@@ -7,7 +7,7 @@ A PHP bot, used to fix linter errors in wikipedia. (Developing)
 
 ## Instructions
 ### Prepared work
-* Hclear-bot requires PHP 7.0+, mbsting extension and cURL extension.
+* Hclear-bot requires PHP 7.0+, mbstring extension and cURL extension.
 * A [owner-only OAuth consumer](https://www.mediawiki.org/wiki/OAuth/Owner-only_consumers)
 ### Config
 1. Copy config.etc.php to config.php
