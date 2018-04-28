@@ -32,23 +32,38 @@ class FixMultipleUnclosedFormattingTagsTest extends TestCase {
 		$method = new \ReflectionMethod( '\HclearBot\FixMultipleUnclosedFormattingTags::catchTemplateName' );
 		$method->setAccessible( true );
 
-		$expected = [
+		// With template test
+		$expected[1] = [
 			'Template:test',
 			'Template:test1',
 			'Template:test2',
 			'Template:test4',
-			'Template:test3',
-			'Portal:物理学/简介'
+			'Template:test3'
 		];
-		$text = <<<TEXT
+		$text[1] = <<<TEXT
 *{{test}}{{test1|test}}
 :{{test2}}{{test4}}
 ::{{test3|
 This is a test.
 }}
-	{{Portal:物理学/简介}}
 TEXT;
-		$result = $method->invoke( new \HclearBot\FixMultipleUnclosedFormattingTags(), $text );
-		$this->assertEquals( $expected, $result );
+		$result[1] = $method->invoke( new \HclearBot\FixMultipleUnclosedFormattingTags(), $text[1] );
+		$this->assertEquals( $expected[1], $result[1] );
+
+		// Without template test
+		$expected[2] = [
+			'Portal:物理学/box-header',
+			'Portal:物理学/简介',
+			'Portal:物理学/box-footer',
+			'test'
+		];
+		$text[2] = <<<TEXT
+{{/box-header|物理主題首頁|Portal:物理学/简介}}
+{{Portal:物理学/简介}}
+{{/box-footer|}}
+		{{:test}}
+TEXT;
+		$result[2] = $method->invoke( new \HclearBot\FixMultipleUnclosedFormattingTags(), $text[2], 'Portal:物理学' );
+		$this->assertEquals( $expected[2], $result[2] );
 	}
 }

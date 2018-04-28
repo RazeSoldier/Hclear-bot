@@ -50,4 +50,12 @@ class APIRevisions extends ApiBase {
 	public function getPageID() {
 		return $this->apiResponseData['query']['pages'][0]['pageid'];
 	}
+
+	/**
+	 * Get the page title
+	 * @return string
+	 */
+	public function getPageTitle() : string {
+		return $this->apiResponseData['query']['pages'][0]['title'];
+	}
 }

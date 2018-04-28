@@ -109,7 +109,7 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	private function handleMultiTemplateError(array $data) {
 		$revision = new APIRevisions( $data['pageid'] );
 		$text = $this->catchHTML( $revision->getContent(), $data['location'][0], $data['location'][1] );
-		$templateList = $this->catchTemplateName( $text );
+		$templateList = $this->catchTemplateName( $text, $revision->getPageTitle() );
 		$pageids = new APIPage( 'title', $templateList );
 		foreach( $pageids->getData()['query']['pages'] as $page ) {
 			$pageList[] = $page['pageid'];
@@ -158,13 +158,21 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	/**
 	 * Capture all template names from $text (wikitext)
 	 * @param string $text
+	 * @param string $pageTitle
 	 * @return array
 	 */
-	private function catchTemplateName(string $text) : array {
+	private function catchTemplateName(string $text, string $pageTitle = null) : array {
 		$pattern = '/{{(?<name>((?!\|)(?!}}).)*)\n?(?<suffix>((?!}}).|\n)*)}}/';
 		preg_match_all( $pattern, $text, $matches );
 		foreach( $matches['name'] as $value ) {
-			if ( strpos( $value, ':' ) ) {
+			// Match like {{/test}} case
+			if ( strpos( $value, '/' ) === 0 ) {
+				$returnValue[] = $pageTitle . $value;
+			// Match like {{:test}} case
+			} elseif ( 0 === $pos = strpos( $value, ':' ) ) {
+				$returnValue[] = str_replace( ':', null, $value );
+			// Match like {{topic:test}} case
+			} elseif ( $pos > 0 ) {
 				$returnValue[] = $value;
 			} else {
 				$returnValue[] = 'Template:' . $value;
