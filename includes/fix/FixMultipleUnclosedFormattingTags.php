@@ -161,11 +161,14 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	 * @return array
 	 */
 	private function catchTemplateName(string $text) : array {
-		$pattern1 = '/{{(?<name>((?!\|)(?!}}).)*)\n?(?<suffix>((?!}}).|\n)*)}}/';
-		preg_match_all( $pattern1, $text, $matches );
-		$pattern2 = '/^[T|t]emplate:/';
+		$pattern = '/{{(?<name>((?!\|)(?!}}).)*)\n?(?<suffix>((?!}}).|\n)*)}}/';
+		preg_match_all( $pattern, $text, $matches );
 		foreach( $matches['name'] as $value ) {
-			$returnValue[] = 'Template:' . preg_replace( $pattern2, null, $value );
+			if ( strpos( $value, ':' ) ) {
+				$returnValue[] = $value;
+			} else {
+				$returnValue[] = 'Template:' . $value;
+			}
 		}
 		return $returnValue;
 	}

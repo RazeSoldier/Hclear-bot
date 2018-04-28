@@ -37,7 +37,8 @@ class FixMultipleUnclosedFormattingTagsTest extends TestCase {
 			'Template:test1',
 			'Template:test2',
 			'Template:test4',
-			'Template:test3'
+			'Template:test3',
+			'Portal:物理学/简介'
 		];
 		$text = <<<TEXT
 *{{test}}{{test1|test}}
@@ -45,6 +46,7 @@ class FixMultipleUnclosedFormattingTagsTest extends TestCase {
 ::{{test3|
 This is a test.
 }}
+	{{Portal:物理学/简介}}
 TEXT;
 		$result = $method->invoke( new \HclearBot\FixMultipleUnclosedFormattingTags(), $text );
 		$this->assertEquals( $expected, $result );
