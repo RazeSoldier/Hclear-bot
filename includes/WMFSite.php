@@ -1,6 +1,6 @@
 <?php
 /**
- * Bot core
+ * 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,12 +22,37 @@
 
 namespace HclearBot;
 
-class Core {
+class WMFSite {
 	/**
-	 * Run bot
+	 * @var array A map for all WMF sites
 	 */
-	public function run() {
-		$obj = new FixMultipleUnclosedFormattingTags();
-		$obj->execute();
+	private $list = [
+		'zhwiki' => 'zh.wikipedia.org',
+		'enwiki' => 'en.wikipedia.org'
+	];
+
+	/**
+	 * @var string Url to the OAuth special page
+	 */
+	private $endPoint;
+
+	/**
+	 * Initialize a WMFSite object
+	 * @param string $wiki A wiki abbreviation (E.g. zhwiki, enwiki)
+	 * @return WMFSite
+	 */
+	public function __construct(string $wiki) {
+		if ( !isset( $this->list[$wiki] ) ) {
+			throw new \UnexpectedValueException( "Invalid wiki abbreviation \"{$wiki}\"", 200 );
+		}
+		$this->endPoint = "https://{$this->list[$wiki]}/w/index.php?title=Special:OAuth";
+	}
+
+	/**
+	 * Get end point URL
+	 * @return string
+	 */
+	public function getEndpoint() : string {
+		return $this->endPoint;
 	}
 }

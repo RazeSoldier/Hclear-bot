@@ -34,5 +34,6 @@ return [
 	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
 	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
 	'OAuthConfig' => APP_PATH . '/includes/config/OAuthConfig.php',
+	'WMFSite' => APP_PATH . '/includes/WMFSite.php',
 	'TextNode' => APP_PATH . '/includes/tidy/TextNode.php'
 ];

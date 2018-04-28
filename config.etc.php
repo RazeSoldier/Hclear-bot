@@ -8,4 +8,4 @@ $gConsumerSecret = ''; // Your Consumer secret
 $gAccessKey = ''; // The token that used to access your Consumer
 $gAccessSecret = ''; // The secret that used to access your Consumer
 
-$entryPoint = ''; // Which wiki do you want to improve? (E.g. zhwiki, enwiki)
+$gEntryPoint = ''; // Which wiki do you want to improve? (E.g. zhwiki, enwiki)

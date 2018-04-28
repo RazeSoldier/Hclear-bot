@@ -22,6 +22,13 @@
 
 namespace HclearBot;
 
+use MediaWiki\OAuthClient\{
+	ClientConfig,
+	Consumer,
+	Client,
+	Token
+};
+
 /**
  * Used to convert JSON to an array
  * @param string $jsonData
@@ -73,4 +80,20 @@ function errorHandler(int $errno, string $errstr,string $errfile, int $errline) 
  */
 function branchLine(string $text) : array {
 	return mb_split( '\n', $text );
+}
+
+/**
+ * OAuth authorize
+ * @global Config $gConfig
+ * @global WMFSite $gWMFSite
+ * @return null
+ */
+function oauthAuthorize() {
+	global $gConfig, $gWMFSite;
+	$endpoint = $gWMFSite->getEndpoint();
+	$conf = new ClientConfig( $endpoint );
+	$conf->setConsumer( new Consumer( $gConfig->authConfig->consumerKey, $gConfig->authConfig->consumerSecret ) );
+
+	$GLOBALS['gClient'] = new Client( $conf );
+	$GLOBALS['gAccessToken'] = new Token( $gConfig->authConfig->accessKey, $gConfig->authConfig->accessSecret );
 }

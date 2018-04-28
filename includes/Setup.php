@@ -54,11 +54,13 @@ require_once APP_PATH . '/vendor/autoload.php';
 
 require_once APP_PATH . '/includes/GlobalFunctions.php';
 
+require_once APP_PATH . '/includes/Core.php';
+
 # Using errorHandler() to error messages to ErrorException
 set_error_handler( 'HclearBot\errorHandler' );
 
 $gConfig = new \HclearBot\Config();
 
-require_once APP_PATH . '/includes/Core.php';
+$gWMFSite = new \HclearBot\WMFSite( $gConfig->entryConfig->entryPoint );
 
-HclearBot\Core::oauthAuthorize();
+HclearBot\oauthAuthorize();
