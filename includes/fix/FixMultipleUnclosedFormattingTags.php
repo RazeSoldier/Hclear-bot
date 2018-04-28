@@ -83,6 +83,7 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		$send = ( new APIEdit() )->doEdit($data['pageid'], $result, 'Fix multiple-unclosed-formatting-tags error' );
 		$this->writeCache( 'lntfrom', $data['lintId'] );
 		var_dump(parent::logging( [ 'queryResult' => $data, 'sendResult' => $send ] ));
+		unset( $revision, $text, $result, $send );
 	}
 
 	private function loopBranchLine(string $text, string $needCloseTag) : string {

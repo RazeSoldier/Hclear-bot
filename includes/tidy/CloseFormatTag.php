@@ -87,6 +87,7 @@ class CloseFormatTag {
 
 		// Start loop
 		if ( $this->checkStartOffset < mb_strlen( $this->value ) ) {
+			unset( $needCheckText, $startTagOffset, $endTagOffset, $preCheckText, $check );
 			$this->doClose();
 		}
 
