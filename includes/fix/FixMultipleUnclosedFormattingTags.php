@@ -173,7 +173,11 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 				$returnValue[] = str_replace( ':', null, $value );
 			// Match like {{topic:test}} case
 			} elseif ( $pos > 0 ) {
-				$returnValue[] = $value;
+				if ( strpos( $this->catchHTML( $value,0, $pos ), ' ' ) !== false ) {
+					$returnValue[] = 'Template:' . $value;
+				} else {
+					$returnValue[] = $value;
+				}
 			} else {
 				$returnValue[] = 'Template:' . $value;
 			}
