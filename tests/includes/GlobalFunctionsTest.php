@@ -22,9 +22,13 @@
 
 namespace HclearBot\test;
 
+use function HclearBot\getEndKey;
 use PHPUnit\Framework\TestCase;
 
 class TestGlobalFuntions extends TestCase {
+	/*
+	 * Test branchLine()
+	 */
 	public function testBranchLine() {
 		$text = <<<TEXT
 line 1
@@ -37,5 +41,28 @@ TEXT;
 			'    line 3'
 		];
 		$this->assertEquals( $expected, \HclearBot\branchLine( $text ) );
+	}
+
+	/**
+	 * Test getEndKey()
+	 */
+	public function testGetEndKey() {
+		// Test $num = false
+		$arr[1] = [
+			1 => '1',
+			3 => '3'
+		];
+		$expected[1] = 3;
+		$this->assertEquals( $expected[1], getEndKey( $arr[1] ) );
+
+		// Test $num = true
+		$arr[2] = [
+			1 => '1',
+			3 => '3',
+			5 => '5',
+			'test' => '123'
+		];
+		$expected[2] = 5;
+		$this->assertEquals( $expected[2], getEndKey( $arr[2], true ) );
 	}
 }

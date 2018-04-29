@@ -97,3 +97,26 @@ function oauthAuthorize() {
 	$GLOBALS['gClient'] = new Client( $conf );
 	$GLOBALS['gAccessToken'] = new Token( $gConfig->authConfig->accessKey, $gConfig->authConfig->accessSecret );
 }
+
+/**
+ * Get the last value of an array
+ * @param array $arr
+ * @param bool $num
+ * @return int|string
+ */
+function getEndKey(array $arr, bool $num = false) {
+	end( $arr );
+	if ( !$num ) {
+		return key( $arr );
+	} else {
+		if ( !is_int( key( $arr ) ) ) {
+			while ( true ) {
+				prev( $arr );
+				if ( is_int( key( $arr ) ) ) {
+					break;
+				}
+			}
+		}
+		return key( $arr );
+	}
+}
