@@ -25,7 +25,7 @@ namespace HclearBot\test;
 use function HclearBot\getEndKey;
 use PHPUnit\Framework\TestCase;
 
-class TestGlobalFuntions extends TestCase {
+class GlobalFuntionsTest extends TestCase {
 	/*
 	 * Test branchLine()
 	 */

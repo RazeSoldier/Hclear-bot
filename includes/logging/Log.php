@@ -28,6 +28,11 @@ namespace HclearBot;
  */
 class Log {
 	/**
+	 * @var string Log path
+	 */
+	private $logPath;
+
+	/**
 	 * @var string Log name
 	 */
 	private $logName;
@@ -39,15 +44,42 @@ class Log {
 
 	/**
 	 * Initialize a Log object
-	 * @param string $logName The name of the file you want to create
+	 * @param string $logPath The name of the file you want to create
 	 * @return Log
 	 */
-	public function __construct(string $logName) {
-		$this->logName = $logName;
-		if ( file_exists( $this->logName ) ) {
+	public function __construct(string $logPath) {
+		$this->logPath = $logPath;
+		$this->logName = basename( $this->logPath, '.' . Logger::logExtension );
+		if ( file_exists( $this->logPath ) ) {
 			throw new \RuntimeException( 'File already exists', 106 );
 		} else {
-			$this->file = new \SplFileObject( $this->logName, 'bw+' );
+			$this->file = new \SplFileObject( $this->logPath, 'w+b' );
+			$this->init();
 		}
+	}
+
+	/**
+	 * Initialize this log
+	 */
+	private function init() {
+		global $gConfig;
+		$this->write( Markdown::h1( ucfirst( $this->logName ) ) . "\n" ); // Write a title for this log
+
+		// Write a base information for this job
+		$this->write( Markdown::h2( 'Job information' ) . "\n" );
+		$this->write( 'Start time: ' . time() . Markdown::newline() );
+		$this->write( 'Fix type: ' . $gConfig->fixerConfig->fixType . Markdown::newline() );
+	}
+
+	/**
+	 * Write a string to the file
+	 * @param string $text
+	 * @return bool Returns true if written successfully, or throw a RuntimeException on error
+	 */
+	public function write(string $text) {
+		if ( $this->file->fwrite( $text ) === 0 ) {
+			throw new \RuntimeException( 'Write failed', 107 );
+		}
+		return true;
 	}
 }

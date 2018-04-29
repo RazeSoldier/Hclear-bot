@@ -1,6 +1,6 @@
 <?php
 /**
- * Bot core
+ * Test Markdown class
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,21 +20,21 @@
  * @file
  */
 
-namespace HclearBot;
+namespace HclearBot\test;
 
-class Core {
-	/**
-	 * Run bot
-	 */
-	public function run() {
-		while ( true ) {
-			$job = new Job( function() {
-				$workFixer = Fixer::init();
-				$workFixer->execute();
-				unset( $workFixer );
-			} );
-			$job->execute();
-			unset( $job );
-		}
+use PHPUnit\Framework\TestCase;
+use HclearBot\Markdown;
+
+class MarkdownTest extends TestCase {
+	public function testGenerateH1() {
+		$text = 'This is a title.';
+		$expected = '# This is a title.';
+		$this->assertEquals( $expected, Markdown::h1( $text ) );
+	}
+
+	public function testGenerateH4() {
+		$text = 'This is a small title.';
+		$expected = '#### This is a small title.';
+		$this->assertEquals( $expected, Markdown::h4( $text ) );
 	}
 }

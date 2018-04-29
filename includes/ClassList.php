@@ -34,8 +34,10 @@ return [
 	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
 	'FixerConfig' => APP_PATH . '/includes/config/FixerConfig.php',
 	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
+	'Job' => APP_PATH . '/includes/Job.php',
 	'Log' => APP_PATH . '/includes/logging/Log.php',
 	'Logger' => APP_PATH . '/includes/logging/Logger.php',
+	'Markdown' => APP_PATH . '/includes/Markdown.php',
 	'OAuthConfig' => APP_PATH . '/includes/config/OAuthConfig.php',
 	'WMFSite' => APP_PATH . '/includes/WMFSite.php',
 	'TextNode' => APP_PATH . '/includes/tidy/TextNode.php'

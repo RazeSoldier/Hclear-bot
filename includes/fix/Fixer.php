@@ -29,6 +29,11 @@ namespace HclearBot;
  */
 abstract class Fixer {
 	/**
+	 * @var Log
+	 */
+	protected $log;
+
+	/**
 	 * @var array Fixer map
 	 */
 	static public $fixers = [

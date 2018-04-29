@@ -39,9 +39,13 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	 * First, read the mess left by the previous transaction from the cache
 	 * Then, query the lint error list from the API
 	 *
-	 * @return object FixMultipleUnclosedFormattingTags
+	 * @return FixMultipleUnclosedFormattingTags
 	 */
 	public function __construct() {
+		if ( !defined( 'PHPUNIT_TEST' ) ) {
+			global $gLogger;
+			$this->log = $gLogger->getLog( 'work' );
+		}
 		$lntfrom = (int)$this->readCache( 'lntfrom' );
 		$api = new APIMultipleUnclosedFormattingTags( 'batch', ['limit' => 20, 'from' => $lntfrom] );
 		$this->errorList = $api->getData()['query']['linterrors'];

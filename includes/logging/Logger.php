@@ -27,6 +27,8 @@ namespace HclearBot;
  * @class
  */
 class Logger {
+	const logExtension = 'log.md';
+
 	/**
 	 * @var string Directory path for storing logs
 	 */
@@ -42,7 +44,7 @@ class Logger {
 	 * @return Logger
 	 */
 	public function __construct() {
-		$this->logDir = APP_PATH . '/storage/log';
+		$this->logDir = APP_PATH . '/storage/log/';
 		if ( !file_exists( $this->logDir ) ) {
 			if ( !mkdir( $this->logDir ) ) {
 				throw new \RuntimeException( "Failed to create {$this->logDir} folder", 105 );
@@ -53,15 +55,15 @@ class Logger {
 	/**
 	 * Create a log to Logger::$logs
 	 * @param string $name Log name
-	 * @param int $logIndex Log index value
-	 * @return int Log index value
+	 * @param int|string $logIndex Log index value
+	 * @return int|string Log index value
 	 */
-	public function createLog(string $name, int $logIndex = null) : int {
+	public function createLog(string $name, $logIndex = null) {
 		if ( isset( $logIndex ) ) {
-			$this->logs[$logIndex] = new Log( $name );
+			$this->logs[$logIndex] = new Log( $this->logDir . $name . '.' . self::logExtension );
 			return $logIndex;
 		} else {
-			$this->logs[] = new Log( $name );
+			$this->logs[] = new Log( $this->logDir . $name . '.' . self::logExtension );
 			return getEndKey( $this->logs, true );
 		}
 	}
@@ -76,10 +78,18 @@ class Logger {
 
 	/**
 	 * Get the log
-	 * @param int $logIndex Log index value
+	 * @param int|string $logIndex Log index value
 	 * @return Log
 	 */
-	public function getLog(int $logIndex) : Log {
+	public function getLog($logIndex) : Log {
 		return $this->logs[$logIndex];
+	}
+
+	/**
+	 * Count logs in the log directory
+	 * @return int The number of logs in the log directory
+	 */
+	public function countLogs() : int {
+		return count( scandir( $this->logDir ) ) - 2;
 	}
 }

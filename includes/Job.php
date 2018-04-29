@@ -1,6 +1,6 @@
 <?php
 /**
- * Bot core
+ * A job
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,19 +22,32 @@
 
 namespace HclearBot;
 
-class Core {
+/**
+ * A job
+ * @class
+ */
+class Job {
 	/**
-	 * Run bot
+	 * @var callable The code to be executed by this job
 	 */
-	public function run() {
-		while ( true ) {
-			$job = new Job( function() {
-				$workFixer = Fixer::init();
-				$workFixer->execute();
-				unset( $workFixer );
-			} );
-			$job->execute();
-			unset( $job );
-		}
+	private $jobCode;
+
+	/**
+	 * Job constructor
+	 * Initializate this job
+	 * @param callable $jobCode The code to be executed by this job
+	 */
+	public function __construct(callable $jobCode) {
+		global $gLogger;
+		$logName = 'job' . ( $gLogger->countLogs() + 1 );
+		$gLogger->createLog( $logName, 'work' );
+		$this->jobCode = $jobCode;
+	}
+
+	/**
+	 * To execute this job
+	 */
+	public function execute() {
+		call_user_func( $this->jobCode );
 	}
 }
