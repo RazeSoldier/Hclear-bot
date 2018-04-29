@@ -45,7 +45,7 @@ class Log {
 	public function __construct(string $logName) {
 		$this->logName = $logName;
 		if ( file_exists( $this->logName ) ) {
-			throw new \RuntimeException( 'File already exists', 107 );
+			throw new \RuntimeException( 'File already exists', 106 );
 		} else {
 			$this->file = new \SplFileObject( $this->logName, 'bw+' );
 		}
