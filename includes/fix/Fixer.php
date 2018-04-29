@@ -29,6 +29,30 @@ namespace HclearBot;
  */
 abstract class Fixer {
 	/**
+	 * @var array Fixer map
+	 */
+	static public $fixers = [
+		'multiple-unclosed-formatting-tags' => 'FixMultipleUnclosedFormattingTags'
+	];
+
+	/**
+	 * Initialize the work fixer
+	 */
+	static public function init() {
+		global $gConfig;
+		$fixerName = '\HclearBot\\' . self::$fixers[$gConfig->fixerConfig->fixType];
+		$fixer = new $fixerName();
+		return $fixer;
+	}
+
+	/**
+	 * The fixer must define this method
+	 */
+	abstract public function execute();
+
+	# The following area to place the help methods
+
+	/**
 	 * Used to catch HTML
 	 * @param string $input
 	 * @param int $start

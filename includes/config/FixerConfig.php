@@ -1,6 +1,6 @@
 <?php
 /**
- * Bot core
+ * Used to handle Fixer-related config
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,12 +22,19 @@
 
 namespace HclearBot;
 
-class Core {
+class FixerConfig extends Config {
 	/**
-	 * Run bot
+	 * @var string
 	 */
-	public function run() {
-		$workFixer = Fixer::init();
-		$workFixer->execute();
+	public $fixType;
+
+	public function __construct() {
+		global $gFixType;
+		$this->fixType = $gFixType;
+
+		$needCheckConfig = [
+			'gFixType' => $this->fixType
+		];
+		$this->checkIsSet( $needCheckConfig );
 	}
 }

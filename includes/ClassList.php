@@ -32,6 +32,7 @@ return [
 	'Config' => APP_PATH . '/includes/config/Config.php',
 	'EntryConfig' => APP_PATH . '/includes/config/EntryConfig.php',
 	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
+	'FixerConfig' => APP_PATH . '/includes/config/FixerConfig.php',
 	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
 	'Log' => APP_PATH . '/includes/logging/Log.php',
 	'Logger' => APP_PATH . '/includes/logging/Logger.php',

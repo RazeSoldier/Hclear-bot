@@ -34,12 +34,18 @@ class Config {
 	public $entryConfig;
 
 	/**
+	 * @var FixerConfig
+	 */
+	public $fixerConfig;
+
+	/**
 	 * Initialize a Config object
 	 * @return Config
 	 */
 	public function __construct() {
 		$this->authConfig = new OAuthConfig();
 		$this->entryConfig = new EntryConfig();
+		$this->fixerConfig = new FixerConfig();
 	}
 
 	/**
