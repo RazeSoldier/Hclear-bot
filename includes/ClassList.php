@@ -33,6 +33,8 @@ return [
 	'EntryConfig' => APP_PATH . '/includes/config/EntryConfig.php',
 	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
 	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
+	'Log' => APP_PATH . '/includes/logging/Log.php',
+	'Logger' => APP_PATH . '/includes/logging/Logger.php',
 	'OAuthConfig' => APP_PATH . '/includes/config/OAuthConfig.php',
 	'WMFSite' => APP_PATH . '/includes/WMFSite.php',
 	'TextNode' => APP_PATH . '/includes/tidy/TextNode.php'

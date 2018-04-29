@@ -59,6 +59,8 @@ require_once APP_PATH . '/includes/Core.php';
 # Using errorHandler() to error messages to ErrorException
 set_error_handler( 'HclearBot\errorHandler' );
 
+$gLogger = new \HclearBot\Logger();
+
 $gConfig = new \HclearBot\Config();
 
 $gWMFSite = new \HclearBot\WMFSite( $gConfig->entryConfig->entryPoint );
