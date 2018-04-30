@@ -33,15 +33,34 @@ class Job {
 	private $jobCode;
 
 	/**
+	 * @var callable|null The code to be executed when shutdown this job
+	 */
+	private $destructCode;
+
+	/**
+	 * @var float
+	 */
+	private $startTime;
+
+	/**
+	 * @var float
+	 */
+	private $endTime;
+
+	/**
 	 * Job constructor
 	 * Initializate this job
 	 * @param callable $jobCode The code to be executed by this job
+	 * @param callable $destructCode The code to be executed when shutdown this job
 	 */
-	public function __construct(callable $jobCode) {
+	public function __construct(callable $jobCode, callable $destructCode = null) {
 		global $gLogger;
+		$_SESSION['jobStartTime'] = $this->startTime = microtime( true );
 		$logName = 'job' . ( $gLogger->countLogs() + 1 );
 		$gLogger->createLog( $logName, 'work' );
+
 		$this->jobCode = $jobCode;
+		$this->destructCode = $destructCode;
 	}
 
 	/**
@@ -49,5 +68,28 @@ class Job {
 	 */
 	public function execute() {
 		call_user_func( $this->jobCode );
+	}
+
+	/**
+	 * Shutdown this job
+	 */
+	public function __destruct() {
+		global $gLogger;
+		$_SESSION['jobEndTime'] = $this->endTime = microtime( true );
+		$log = $gLogger->getLog( 'work' );
+		$log->write( Markdown::h2( 'Job finished' ) . "\n" );
+		$log->write( 'Finished time: ' . $_SESSION['jobEndTime'] . Markdown::newline() );
+		$log->write( 'Duration: ' . ( $_SESSION['jobEndTime'] - $_SESSION['jobStartTime'] ) . Markdown::newline() );
+		$log->write( "Edited: {$_SESSION['fixResult']['Edited']}, " .
+			"Unchanged edit: {$_SESSION['fixResult']['Unchanged edit']}, Unknown status: {$_SESSION['fixResult']['Unknown status']}, " .
+			"Edit failed: {$_SESSION['fixResult']['Edit failed']}");
+
+		echo "One job was finished:\n";
+		print_r( $_SESSION );
+
+		if ( is_callable( $this->destructCode ) ) {
+			call_user_func( $this->destructCode );
+		}
+		$_SESSION = array();
 	}
 }

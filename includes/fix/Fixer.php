@@ -69,10 +69,7 @@ abstract class Fixer {
 	 * Shutdown this fixer
 	 */
 	public function __destruct() {
-		$this->log->write( Markdown::h2( 'Job finished' ) . "\n" );
-		$this->log->write( "Edited: {$this->fixResult['Edited']}, " .
-		"Unchanged edit: {$this->fixResult['Unchanged edit']}, Unknown status: {$this->fixResult['Unknown status']}, " .
-		"Edit failed: {$this->fixResult['Edit failed']}");
+		$_SESSION['fixResult'] = $this->fixResult;
 	}
 
 	# The following area to place the help methods

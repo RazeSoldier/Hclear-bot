@@ -60,10 +60,10 @@ class Logger {
 	 */
 	public function createLog(string $name, $logIndex = null) {
 		if ( isset( $logIndex ) ) {
-			$this->logs[$logIndex] = new Log( $this->logDir . $name . '.' . self::logExtension );
+			$this->logs[$logIndex] = new JobLog( $this->logDir . $name . '.' . self::logExtension );
 			return $logIndex;
 		} else {
-			$this->logs[] = new Log( $this->logDir . $name . '.' . self::logExtension );
+			$this->logs[] = new JobLog( $this->logDir . $name . '.' . self::logExtension );
 			return getEndKey( $this->logs, true );
 		}
 	}

@@ -27,11 +27,11 @@ class Core {
 	 * Run bot
 	 */
 	public function run() {
+		session_start();
 		while ( true ) {
 			$job = new Job( function() {
 				$workFixer = Fixer::init();
 				$workFixer->execute();
-				unset( $workFixer );
 			} );
 			$job->execute();
 			unset( $job );

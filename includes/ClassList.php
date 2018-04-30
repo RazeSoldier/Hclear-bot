@@ -35,6 +35,7 @@ return [
 	'FixerConfig' => APP_PATH . '/includes/config/FixerConfig.php',
 	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
 	'Job' => APP_PATH . '/includes/Job.php',
+	'JobLog' => APP_PATH . '/includes/logging/JobLog.php',
 	'Log' => APP_PATH . '/includes/logging/Log.php',
 	'Logger' => APP_PATH . '/includes/logging/Logger.php',
 	'Markdown' => APP_PATH . '/includes/Markdown.php',
