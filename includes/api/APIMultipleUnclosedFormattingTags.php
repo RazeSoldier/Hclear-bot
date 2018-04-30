@@ -23,28 +23,30 @@
 namespace HclearBot;
 
 class APIMultipleUnclosedFormattingTags extends ApiBase {
-	public function __construct(string $query, $extra) {
+	public function __construct(string $query, $options) {
+		global $gConfig;
+		$wiki = $gConfig->entryConfig->entryPoint;
 		switch ( $query ) {
 			case 'batch':
-				if ( !is_array( $extra ) ) {
+				if ( !is_array( $options ) ) {
 					throw new \RuntimeException( '$extra is not an array.', 104 );
 				}
 				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
-				. "&lntcategories=multiple-unclosed-formatting-tags&lntlimit={$extra['limit']}&lntfrom={$extra['from']}", 'zhwiki' );
+				. "&lntcategories=multiple-unclosed-formatting-tags&lntlimit={$options['limit']}&lntfrom={$options['from']}", $wiki );
 				break;
 			case 'alone':
-				if ( !is_int( $extra ) ) {
+				if ( !is_int( $options ) ) {
 					throw new \RuntimeException( '$extra is not an integer.', 103 );
 				}
 				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
-				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$extra}", 'zhwiki' );
+				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$options}", $wiki );
 				break;
 			case 'list':
-				if ( !is_array( $extra ) ) {
+				if ( !is_array( $options ) ) {
 					throw new \RuntimeException( '$extra is not an array.', 104 );
 				}
 				$queryList = null;
-				foreach( $extra as $value ) {
+				foreach($options as $value ) {
 					if ( $queryList === null ) {
 						$queryList = $value;
 					} else {
@@ -53,7 +55,7 @@ class APIMultipleUnclosedFormattingTags extends ApiBase {
 				}
 				$queryList = rawurlencode( $queryList );
 				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
-				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$queryList}", 'zhwiki' );
+				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$queryList}", $wiki );
 				break;
 		}
 		$c = new Curl( $this->apiURL );
