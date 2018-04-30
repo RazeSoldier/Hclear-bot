@@ -37,4 +37,18 @@ class MarkdownTest extends TestCase {
 		$expected = '#### This is a small title.';
 		$this->assertEquals( $expected, Markdown::h4( $text ) );
 	}
+
+	public function testGenerateCodeBlock() {
+		$text = <<<text
+<?php
+echo 'Hello world';
+text;
+		$expected = <<<expected
+```php
+<?php
+echo 'Hello world';
+```
+expected;
+		$this->assertEquals( $expected, Markdown::codeBlock( $text, 'php' ) );
+	}
 }

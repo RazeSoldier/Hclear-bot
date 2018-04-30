@@ -86,6 +86,25 @@ class Markdown {
 	}
 
 	/**
+	 * To generate a code block
+	 * @param string $code
+	 * @param string $lang Assign language of the $code
+	 * @return string A code block
+	 */
+	static public function codeBlock(string $code, string $lang = null) : string {
+		return '```'. $lang . "\n" . $code . "\n" . '```';
+	}
+
+	/**
+	 * To generate a bold text
+	 * @param string $text
+	 * @return string
+	 */
+	static public function bold(string $text) : string {
+		return '**' . $text . '**';
+	}
+
+	/**
 	 * @param string $text
 	 * @param int $level Title level,between 1 and 6
 	 * @return string

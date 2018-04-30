@@ -42,6 +42,7 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	 * @return FixMultipleUnclosedFormattingTags
 	 */
 	public function __construct() {
+		// Initialize working log
 		if ( !defined( 'PHPUNIT_TEST' ) ) {
 			global $gLogger;
 			$this->log = $gLogger->getLog( 'work' );
@@ -49,6 +50,11 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		$lntfrom = (int)$this->readCache( 'lntfrom' );
 		$api = new APIMultipleUnclosedFormattingTags( 'batch', ['limit' => 20, 'from' => $lntfrom] );
 		$this->errorList = $api->getData()['query']['linterrors'];
+		if ( !defined( 'PHPUNIT_TEST' ) ) {
+			$this->log->write(Markdown::h2('Job Start') . "\n");
+			$this->log->write(Markdown::h3('Query result') . "\n");
+			$this->log->write( Markdown::codeBlock( print_r( $this->errorList, true ) ) . "\n" );
+		}
 	}
 
 	/**
@@ -57,6 +63,7 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	 * @return null
 	 */
 	public function execute() {
+		$this->log->write( Markdown::h2( 'Working' ) . "\n" );
 		$count = count( $this->errorList );
 		for ( $i = 0; $i < $count; $i++ ) {
 			$this->main( $this->errorList[$i] );
@@ -66,16 +73,26 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	/**
 	 * Fix a page
 	 * @param array $data The error message of a page
+	 * @param bool Whether to call main() from execute()?
 	 */
-	private function main(array $data) {
+	private function main(array $data, bool $mainCall = true) {
+		$this->log->write( Markdown::h3( "Fix [[{$data['title']}]]" ) . "\n" );
+		$this->log->write( "Page ID: {$data['pageid']}" . Markdown::newline() );
+		$this->log->write( "Lint error ID: {$data['lintId']}" . Markdown::newline() );
+		$this->log->write( "Unclosed format tag: {$data['params']['name']}" . Markdown::newline() );
+
 		// Whether the wrong field is output through the template
 		if ( !empty( $data['templateInfo'] ) ) {
 			// Whether the wrong field is output through multiple templates
 			if ( isset( $data['templateInfo']['multiPartTemplateBlock'] ) ) {
+				$this->log->write( 'Through multiple templates output' . Markdown::newline() );
 				$this->handleMultiTemplateError( $data );
 			} else {
+				$this->log->write( "Through [[{$data['templateInfo']['name']}]] output" . Markdown::newline() );
 				$this->handleTemplateError( $data['templateInfo']['name'] );
 			}
+		} else {
+			$this->log->write( 'Through the template: false' . Markdown::newline() );
 		}
 
 		// Do fix
@@ -86,7 +103,7 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 
 		$send = ( new APIEdit() )->doEdit($data['pageid'], $result, 'Fix multiple-unclosed-formatting-tags error' );
 		$this->writeCache( 'lntfrom', $data['lintId'] );
-		var_dump(parent::logging( [ 'queryResult' => $data, 'sendResult' => $send ] ));
+		var_dump($this->loggingResult( [ 'queryResult' => $data, 'sendResult' => $send ] ));
 		unset( $revision, $text, $result, $send );
 	}
 
@@ -122,7 +139,7 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		$apiData = ( new APIMultipleUnclosedFormattingTags( 'list', $pageList ) )->getData();
 		if ( isset( $data['query']['linterrors'] ) ) {
 			foreach( $data['query']['linterrors'] as $value ) {
-				$this->main( $value );
+				$this->main( $value, false );
 			}
 		}
 
@@ -135,13 +152,15 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	 * @return null
 	 */
 	private function handleTemplateError(string $templateName) {
+		$this->log->write( Markdown::h4( "Fix [[{$templateName}]]" ) . "\n" );
 		$revision = new APIRevisions( $templateName, true );
 		$apier = new APIMultipleUnclosedFormattingTags( 'alone', $revision->getPageID() );
 		if ( !isset( $apier->getData()['query']['linterrors'] ) ) {
+			$this->log->write( 'No lint error data has been found' . Markdown::newline() );
 			return;
 		}
 		foreach ( $apier->getData()['query']['linterrors'] as $value ) {
-			$this->main( $value );
+			$this->main( $value, false );
 		}
 	}
 

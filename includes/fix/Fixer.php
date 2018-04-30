@@ -34,6 +34,16 @@ abstract class Fixer {
 	protected $log;
 
 	/**
+	 * @var array
+	 */
+	protected $fixResult = [
+		'Edited' => 0,
+		'Unchanged edit' => 0,
+		'Edit failed' => 0,
+		'Unknown status' => 0
+	];
+
+	/**
 	 * @var array Fixer map
 	 */
 	static public $fixers = [
@@ -55,6 +65,16 @@ abstract class Fixer {
 	 */
 	abstract public function execute();
 
+	/**
+	 * Shutdown this fixer
+	 */
+	public function __destruct() {
+		$this->log->write( Markdown::h2( 'Job finished' ) . "\n" );
+		$this->log->write( "Edited: {$this->fixResult['Edited']}, " .
+		"Unchanged edit: {$this->fixResult['Unchanged edit']}, Unknown status: {$this->fixResult['Unknown status']}, " .
+		"Edit failed: {$this->fixResult['Edit failed']}");
+	}
+
 	# The following area to place the help methods
 
 	/**
@@ -73,17 +93,25 @@ abstract class Fixer {
 	 * @param array $data
 	 * @return array
 	 */
-	static protected function logging(array $data) {
+	protected function loggingResult(array $data) {
 		if ( isset( $data['sendResult']['edit']['result'] ) ) {
 			if ( isset( $data['sendResult']['edit']['nochange'] ) ) {
+				$this->log->write( Markdown::bold( 'Fixed result: Unchanged edit' ) . Markdown::newline() );
+				$this->fixResult['Unchanged edit']++;
 				$result = 'Without diff';
 			} elseif ( $data['sendResult']['edit']['result'] === 'Success' ) {
 				$result = 'Success';
+				$this->log->write( Markdown::bold( 'Fixed result: Edited' ) . Markdown::newline() );
+				$this->fixResult['Edited']++;
 			} else {
 				$result = $data['sendResult']['edit']['result'];
+				$this->log->write( Markdown::bold( "Fixed result: {$result}" ) . Markdown::newline() );
+				$this->fixResult['Unknown status']++;
 			}
 		} else {
 			$result = 'Edit failed';
+			$this->log->write( Markdown::bold( "Fixed result: {$result}" ) . Markdown::newline() );
+			$this->fixResult['Edit failed']++;
 		}
 		if ( !empty( $data['queryResult']['templateInfo'] ) ) {
 			if ( !isset( $data['queryResult']['templateInfo']['multiPartTemplateBlock'] ) ) {
