@@ -37,6 +37,11 @@ class WMFSite {
 	private $endPoint;
 
 	/**
+	 * @var string Url to the wiki api point
+	 */
+	private $apiPoint;
+
+	/**
 	 * Initialize a WMFSite object
 	 * @param string $wiki A wiki abbreviation (E.g. zhwiki, enwiki)
 	 * @return WMFSite
@@ -46,6 +51,7 @@ class WMFSite {
 			throw new \UnexpectedValueException( "Invalid wiki abbreviation \"{$wiki}\"", 200 );
 		}
 		$this->endPoint = "https://{$this->list[$wiki]}/w/index.php?title=Special:OAuth";
+		$this->apiPoint = "https://{$this->list[$wiki]}/w/api.php";
 	}
 
 	/**
@@ -54,5 +60,13 @@ class WMFSite {
 	 */
 	public function getEndpoint() : string {
 		return $this->endPoint;
+	}
+
+	/**
+	 * Get api point URl
+	 * @return string
+	 */
+	public function getApiPoint() : string {
+		return $this->apiPoint;
 	}
 }
