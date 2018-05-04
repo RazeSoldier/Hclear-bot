@@ -78,7 +78,7 @@ class Editor implements ISingleton {
 			'maxlag' => $gConfig->fixerConfig->maxLag
 		];
 		$result->setResponse(
-			$this->handleResponse( jsonToArray( $this->sendRequest( $apiParams ) ), $apiParams )
+			$this->handleResponse( $this->sendRequest( $apiParams ), $apiParams )
 		);
 		return $result;
 	}
@@ -105,12 +105,12 @@ class Editor implements ISingleton {
 
 	/**
 	 * Handle edit response
-	 * @param array $response
+	 * @param string $response
 	 * @param array $req
 	 * @param bool $mainCall
 	 * @return array|false
 	 */
-	private function handleResponse( array $response, array $req, bool $mainCall = true ) {
+	private function handleResponse( string $response, array $req, bool $mainCall = true ) {
 		if ( isset( $response['error'] ) ) {
 			if ( $response['error']['code'] === 'maxlag' ) {
 				if ( $mainCall ) {
@@ -128,7 +128,7 @@ class Editor implements ISingleton {
 		while ( $retry > $try ) {
 			// Waiting server
 			sleep( ceil( $req['error']['lag'] ) );
-			if ( $this->handleResponse( jsonToArray( $this->sendRequest( $req ) ) , $req, false ) !== false ) {
+			if ( $this->handleResponse( $this->sendRequest( $req ), $req, false ) !== false ) {
 				return;
 			};
 		}
