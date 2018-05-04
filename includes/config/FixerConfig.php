@@ -28,13 +28,34 @@ class FixerConfig extends Config {
 	 */
 	public $fixType;
 
+	/**
+	 * @var int
+	 */
+	public $maxLag;
+
 	public function __construct() {
-		global $gFixType;
+		global $gFixType, $gMaxLag;
 		$this->fixType = $gFixType;
+		$this->maxLag = $gMaxLag;
 
 		$needCheckConfig = [
 			'gFixType' => $this->fixType
 		];
+		$this->checkMaxLag();
 		$this->checkIsSet( $needCheckConfig );
+	}
+
+	/**
+	 * Checks if $gMaxLag is valid
+	 */
+	private function checkMaxLag() {
+		$default = 5;
+		if ( empty( $this->maxLag ) ) {
+			$this->maxLag = $default;
+		} else {
+			if ( !is_int( $this->maxLag ) ) {
+				throw new \DomainException( '$gMaxLag must is an integer number of seconds', 111 );
+			}
+		}
 	}
 }
