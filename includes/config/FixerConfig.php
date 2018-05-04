@@ -33,15 +33,22 @@ class FixerConfig extends Config {
 	 */
 	public $maxLag;
 
+	/**
+	 * @var float
+	 */
+	public $editLimit;
+
 	public function __construct() {
-		global $gFixType, $gMaxLag;
+		global $gFixType, $gMaxLag, $gEditLimit;
 		$this->fixType = $gFixType;
 		$this->maxLag = $gMaxLag;
+		$this->editLimit = $gEditLimit;
 
 		$needCheckConfig = [
 			'gFixType' => $this->fixType
 		];
 		$this->checkMaxLag();
+		$this->checkEditLimit();
 		$this->checkIsSet( $needCheckConfig );
 	}
 
@@ -56,6 +63,16 @@ class FixerConfig extends Config {
 			if ( !is_int( $this->maxLag ) ) {
 				throw new \DomainException( '$gMaxLag must is an integer number of seconds', 111 );
 			}
+		}
+	}
+
+	/**
+	 * Set editLimit to 5, if $gEditLimit is empty
+	 */
+	private function checkEditLimit() {
+		$default = 5;
+		if ( empty( $this->editLimit ) ) {
+			$this->editLimit = $default;
 		}
 	}
 }
