@@ -64,6 +64,8 @@ class Editor implements ISingleton {
 	 * @return EditResult
 	 */
 	public function editPage($page, string $text, string $summary = null) : EditResult {
+		$this->throttle();
+
 		global $gConfig;
 		$result = new EditResult();
 		$varKey = ( is_int( $page ) ) ? 'pageid' : 'title';
@@ -80,6 +82,7 @@ class Editor implements ISingleton {
 		$result->setResponse(
 			$this->handleResponse( $this->sendRequest( $apiParams ), $apiParams )
 		);
+		$_SESSION['lastEditTime'] = microtime( true );
 		return $result;
 	}
 
@@ -133,5 +136,23 @@ class Editor implements ISingleton {
 			};
 		}
 		throw new \RuntimeException( 'Can not edit, because the lag so long', 108 );
+	}
+
+	/**
+	 * According $gEditLimit to control the editing frequency
+	 * @return void
+	 */
+	private function throttle() {
+		global $gConfig;
+		if ( !isset( $_SESSION['lastEditTime'] ) ) {
+			$_SESSION['lastEditTime'] = microtime( true );
+			return;
+		}
+		$limit = $gConfig->fixerConfig->editLimit;
+
+		$diff = microtime( true ) - $_SESSION['lastEditTime'];
+		if ( $diff < $limit ) {
+			usleep( $limit - $diff );
+		}
 	}
 }
