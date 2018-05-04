@@ -34,6 +34,11 @@ abstract class Fixer {
 	protected $log;
 
 	/**
+	 * @var APIEdit
+	 */
+	protected $editor;
+
+	/**
 	 * @var array
 	 */
 	protected $fixResult = [
@@ -152,5 +157,22 @@ abstract class Fixer {
 		$returnValue = $cache->read();
 		unset( $cache );
 		return $returnValue;
+	}
+
+	protected function edit($page, string $text, string $summary = 'Fix multiple-unclosed-formatting-tags error') {
+		if ( $this->editor === null ) {
+			$this->editor = new APIEdit();
+		}
+		$response = $this->editor->doEdit( $page, $text, $summary );
+		if ( isset( $response['error'] ) ) {
+			if ( $response['error']['code'] === 'maxlag' ) {
+				// Retry edit
+				$retry = 0;
+				while ( $retry > 3 ) {
+					$response = $this->editor->doEdit( $page, $text, $summary );
+
+				}
+			}
+		}
 	}
 }
