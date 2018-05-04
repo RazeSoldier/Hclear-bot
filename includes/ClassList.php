@@ -31,7 +31,7 @@ return [
 	'Curl' => APP_PATH . '/includes/connector/Curl.php',
 	'Config' => APP_PATH . '/includes/config/Config.php',
 	'Editor' => APP_PATH . '/includes/edit/Editor.php',
-	'EditorResult' => APP_PATH . '/includes/edit/EditorResult.php',
+	'EditResult' => APP_PATH . '/includes/edit/EditResult.php',
 	'EntryConfig' => APP_PATH . '/includes/config/EntryConfig.php',
 	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
 	'FixerConfig' => APP_PATH . '/includes/config/FixerConfig.php',
