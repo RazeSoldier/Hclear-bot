@@ -120,3 +120,21 @@ function getEndKey(array $arr, bool $num = false) {
 		return key( $arr );
 	}
 }
+
+/**
+ * Do a edit
+ * @param string $editType Allow value: page or section
+ * @param int|string $page
+ * @param string $text
+ * @param string|null $summary
+ * @return EditResult
+ */
+function edit(string $editType, $page, string $text, string $summary = null) {
+	$editor = Editor::getInstance();
+	if ( $editType === 'page' ) {
+		$result = $editor->editPage( $page, $text, $summary );
+	} elseif ( $editType === 'section' ) {
+		$result = $editor->editSection();
+	}
+	return $result;
+}
