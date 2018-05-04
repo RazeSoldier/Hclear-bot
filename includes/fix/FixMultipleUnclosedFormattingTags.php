@@ -101,7 +101,7 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		$result = $this->replaceStr( $revision->getContent(), $this->loopBranchLine( $text, $data['params']['name'] ),
 				$data['location'][0], $data['location'][1] );
 
-		$send = ( new APIEdit() )->doEdit($data['pageid'], $result, 'Fix multiple-unclosed-formatting-tags error' );
+		$send = edit( 'page',$data['pageid'], $result, 'Fix multiple-unclosed-formatting-tags error' )->getResponse();
 		$this->writeCache( 'lntfrom', $data['lintId'] );
 		$this->loggingResult( [ 'queryResult' => $data, 'sendResult' => $send ] );
 		unset( $revision, $text, $result, $send );

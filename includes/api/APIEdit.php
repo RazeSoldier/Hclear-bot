@@ -48,7 +48,7 @@ class APIEdit extends ApiBase {
 	 * @return array
 	 */
 	public function doEdit($pageName, string $text, string $summary = null) {
-		global $gClient, $gAccessToken;
+		global $gClient, $gAccessToken, $gConfig;
 		$varKey = ( is_int( $pageName ) ) ? 'pageid' : 'title';
 		$apiParams = [
 			'action' => 'edit',
@@ -57,6 +57,7 @@ class APIEdit extends ApiBase {
 			'text' => $text,
 			'token' => self::$editToken,
 			'format' => 'json',
+			'maxlag' => $gConfig->fixerConfig->maxLag
 		];
 		$gClient->setExtraParams( $apiParams );
 		$this->apiResponseData = jsonToArray( $gClient->makeOAuthCall(
