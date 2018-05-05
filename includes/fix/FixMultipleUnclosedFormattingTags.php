@@ -42,13 +42,15 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	 * @return FixMultipleUnclosedFormattingTags
 	 */
 	public function __construct() {
+		global $gConfig;
 		// Initialize working log
 		if ( !defined( 'PHPUNIT_TEST' ) ) {
 			global $gLogger;
 			$this->log = $gLogger->getLog( 'work' );
 		}
 		$lntfrom = (int)$this->readCache( 'lntfrom' );
-		$api = new APIMultipleUnclosedFormattingTags( 'batch', ['limit' => 20, 'from' => $lntfrom] );
+		$api = new APIMultipleUnclosedFormattingTags( 'batch', ['limit' => $gConfig->fixerConfig->maxQuery
+			, 'from' => $lntfrom] );
 		$this->errorList = $api->getData()['query']['linterrors'];
 		if ( !defined( 'PHPUNIT_TEST' ) ) {
 			$this->log->write(Markdown::h2('Job Start') . "\n");

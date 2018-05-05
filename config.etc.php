@@ -17,3 +17,5 @@ $gMaxLag = ''; // An integer number of seconds that specify edits maximum lag va
 $gEditLimit = ''; // An number of seconds that specify how much time the next edit should elapse from the previous edit (Default value: 5)
 
 $gMaxJob = ''; // An integer number that specify job execute times (Default value: -1)
+
+$gFixerMaxQuery = ''; // An integer number that each working maximum query lint API (Default value: 20)

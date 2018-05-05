@@ -30,7 +30,7 @@ class JobConfig extends Config {
 
 	public function __construct() {
 		global $gMaxJob;
-		$this->maxJob;
+		$this->maxJob = $gMaxJob;
 
 		$this->checkMaxJob();
 	}

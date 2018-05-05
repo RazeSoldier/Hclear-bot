@@ -38,17 +38,24 @@ class FixerConfig extends Config {
 	 */
 	public $editLimit;
 
+	/**
+	 * @var int
+	 */
+	public $maxQuery;
+
 	public function __construct() {
-		global $gFixType, $gMaxLag, $gEditLimit;
+		global $gFixType, $gMaxLag, $gEditLimit, $gFixerMaxQuery;
 		$this->fixType = $gFixType;
 		$this->maxLag = $gMaxLag;
 		$this->editLimit = $gEditLimit;
+		$this->maxQuery = $gFixerMaxQuery;
 
 		$needCheckConfig = [
 			'gFixType' => $this->fixType
 		];
 		$this->checkMaxLag();
 		$this->checkEditLimit();
+		$this->checkMaxQuery();
 		$this->checkIsSet( $needCheckConfig );
 	}
 
@@ -73,6 +80,23 @@ class FixerConfig extends Config {
 		$default = 5;
 		if ( empty( $this->editLimit ) ) {
 			$this->editLimit = $default;
+		}
+	}
+
+	/**
+	 * Checks if $gFixerMaxQuery is valid
+	 */
+	private function checkMaxQuery() {
+		$default = 20;
+		if ( empty( $this->maxQuery ) ) {
+			$this->maxQuery = $default;
+		} else {
+			if ( !is_int( $this->maxQuery ) ) {
+				throw new \DomainException( '$gFixerMaxQuery must is an integer number of seconds', 111 );
+			}
+			if ( $this->maxQuery > 1 ) {
+				throw new \DomainException( '$gFixerMaxQuery must be greater than 1', 110 );
+			}
 		}
 	}
 }
