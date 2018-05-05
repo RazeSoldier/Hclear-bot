@@ -19,3 +19,5 @@ $gEditLimit = ''; // An number of seconds that specify how much time the next ed
 $gMaxJob = ''; // An integer number that specify job execute times (Default value: -1)
 
 $gFixerMaxQuery = ''; // An integer number that each working maximum query lint API (Default value: 20)
+
+$gAllowFixNamespace = ''; // An integer number or an arrau that Hclear-bot only fix there namespaces

@@ -43,12 +43,18 @@ class FixerConfig extends Config {
 	 */
 	public $maxQuery;
 
+	/**
+	 * @var int|array|null
+	 */
+	public $allowFixNamespace;
+
 	public function __construct() {
-		global $gFixType, $gMaxLag, $gEditLimit, $gFixerMaxQuery;
+		global $gFixType, $gMaxLag, $gEditLimit, $gFixerMaxQuery, $gAllowFixNamespace;
 		$this->fixType = $gFixType;
 		$this->maxLag = $gMaxLag;
 		$this->editLimit = $gEditLimit;
 		$this->maxQuery = $gFixerMaxQuery;
+		$this->allowFixNamespace = $gAllowFixNamespace;
 
 		$needCheckConfig = [
 			'gFixType' => $this->fixType
@@ -56,6 +62,7 @@ class FixerConfig extends Config {
 		$this->checkMaxLag();
 		$this->checkEditLimit();
 		$this->checkMaxQuery();
+
 		$this->checkIsSet( $needCheckConfig );
 	}
 
@@ -97,6 +104,35 @@ class FixerConfig extends Config {
 			if ( $this->maxQuery > 1 ) {
 				throw new \DomainException( '$gFixerMaxQuery must be greater than 1', 110 );
 			}
+		}
+	}
+
+	/**
+	 * Checks if $gAllowFixNamespace is valid
+	 */
+	private function checkAllowFixNamespace() {
+		if ( empty( $this->allowFixNamespace ) ) {
+			$this->allowFixNamespace = null;
+			return;
+		}
+
+		if ( is_array( $this->allowFixNamespace ) || is_int( $this->allowFixNamespace ) ) {
+			if ( is_array( $this->allowFixNamespace ) ) {
+				if ( !isOneDimensionalArray( $this->allowFixNamespace ) ) {
+					throw new \DomainException( '$gAllowFixNamespace must be an one-dimensional array', 113 );
+				}
+				foreach ( $this->allowFixNamespace as $value ) {
+					if ( !is_int( $value ) ) {
+						throw new \DomainException( 'All value for $gFixerMaxQuery must is an integer', 111 );
+					}
+				}
+			} else {
+				if ( $this->allowFixNamespace <= 0 ) {
+					throw new \DomainException( '$gFixerMaxQuery must be greater than 0', 110 );
+				}
+			}
+		} else {
+			throw new \DomainException( '$gAllowFixNamespace must be a string or an array', 112 );
 		}
 	}
 }
