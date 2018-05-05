@@ -29,13 +29,13 @@ class Core {
 	public function run() {
 		session_start();
 		while ( true ) {
+			$this->jobManager();
 			$job = new Job( function() {
 				$workFixer = Fixer::init();
 				$workFixer->execute();
 			} );
 			$job->execute();
 			unset( $job );
-			$this->jobManager();
 		}
 	}
 

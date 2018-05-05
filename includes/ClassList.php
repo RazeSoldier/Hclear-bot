@@ -38,7 +38,7 @@ return [
 	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
 	'ISingleton' => APP_PATH . '/includes/interface/ISingleton.php',
 	'Job' => APP_PATH . '/includes/Job.php',
-	'JobConifg' => APP_PATH . '/includes/config/JobConfig.php',
+	'JobConfig' => APP_PATH . '/includes/config/JobConfig.php',
 	'JobLog' => APP_PATH . '/includes/logging/JobLog.php',
 	'Log' => APP_PATH . '/includes/logging/Log.php',
 	'Logger' => APP_PATH . '/includes/logging/Logger.php',
