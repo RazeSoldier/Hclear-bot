@@ -32,14 +32,16 @@ class APIMultipleUnclosedFormattingTags extends ApiBase {
 					throw new \RuntimeException( '$extra is not an array.', 104 );
 				}
 				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
-				. "&lntcategories=multiple-unclosed-formatting-tags&lntlimit={$options['limit']}&lntfrom={$options['from']}", $wiki );
+				. "&lntcategories=multiple-unclosed-formatting-tags&lntlimit={$options['limit']}"
+				. "&lntfrom={$options['from']}&lntnamespace={$gConfig->fixerConfig->allowFixNamespace}", $wiki );
 				break;
 			case 'alone':
 				if ( !is_int( $options ) ) {
 					throw new \RuntimeException( '$extra is not an integer.', 103 );
 				}
 				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
-				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$options}", $wiki );
+				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$options}"
+				. "&lntnamespace={$gConfig->fixerConfig->allowFixNamespace}", $wiki );
 				break;
 			case 'list':
 				if ( !is_array( $options ) ) {
@@ -55,7 +57,8 @@ class APIMultipleUnclosedFormattingTags extends ApiBase {
 				}
 				$queryList = rawurlencode( $queryList );
 				$this->apiURL = $this->spliceApiURL( 'action=query&format=json&list=linterrors'
-				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$queryList}", $wiki );
+				. "&lntcategories=multiple-unclosed-formatting-tags&lntpageid={$queryList}"
+				.  "&lntnamespace={$gConfig->fixerConfig->allowFixNamespace}", $wiki );
 				break;
 		}
 		$c = new Curl( $this->apiURL );

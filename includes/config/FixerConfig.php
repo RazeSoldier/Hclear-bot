@@ -62,7 +62,7 @@ class FixerConfig extends Config {
 		$this->checkMaxLag();
 		$this->checkEditLimit();
 		$this->checkMaxQuery();
-
+		$this->checkAllowFixNamespace();
 		$this->checkIsSet( $needCheckConfig );
 	}
 
