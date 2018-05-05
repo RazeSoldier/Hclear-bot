@@ -101,7 +101,7 @@ class FixerConfig extends Config {
 			if ( !is_int( $this->maxQuery ) ) {
 				throw new \DomainException( '$gFixerMaxQuery must is an integer number of seconds', 111 );
 			}
-			if ( $this->maxQuery > 1 ) {
+			if ( $this->maxQuery < 1 ) {
 				throw new \DomainException( '$gFixerMaxQuery must be greater than 1', 110 );
 			}
 		}
