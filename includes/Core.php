@@ -35,6 +35,24 @@ class Core {
 			} );
 			$job->execute();
 			unset( $job );
+			$this->jobManager();
 		}
+	}
+
+	private function jobManager() {
+		global $gConfig;
+		static $limit;
+		if ( $limit === null ) {
+			$limit = $gConfig->jobConfig->maxJob;
+		}
+
+		if ( $limit === -1 ) {
+			return;
+		}
+		static $jobs = 0;
+		if ( $jobs++ < $limit ) {
+			return;
+		}
+		die( 0 );
 	}
 }

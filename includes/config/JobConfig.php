@@ -1,6 +1,6 @@
 <?php
 /**
- * Used to handle config
+ * Used to handle Job-related config
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,48 +22,26 @@
 
 namespace HclearBot;
 
-class Config {
+class JobConfig extends Config {
 	/**
-	 * @var OAuthConfig
+	 * @var int
 	 */
-	public $authConfig;
+	public $maxJob;
 
-	/**
-	 * @var EntryConfig
-	 */
-	public $entryConfig;
-
-	/**
-	 * @var FixerConfig
-	 */
-	public $fixerConfig;
-
-	/**
-	 * @var JobConfig
-	 */
-	public $jobConfig;
-
-	/**
-	 * Initialize a Config object
-	 * @return Config
-	 */
 	public function __construct() {
-		$this->authConfig = new OAuthConfig();
-		$this->entryConfig = new EntryConfig();
-		$this->fixerConfig = new FixerConfig();
-		$this->jobConfig = new JobConfig();
+		global $gMaxJob;
+		$this->maxJob;
+
+		$this->checkMaxJob();
 	}
 
-	/**
-	 * Check if these config is empty
-	 * If a config is empty, a fatal error is thrown
-	 * @param array $needCheckConfig Need to check config
-	 * @return null
-	 */
-	protected function checkIsSet(array $needCheckConfig) {
-		foreach( $needCheckConfig as $key => $value ) {
-			if ( empty( $value ) ) {
-				trigger_error( "Missing {$key} configuration", E_USER_ERROR );
+	private function checkMaxJob() {
+		$default = -1;
+		if ( empty( $this->maxJob ) ) {
+			$this->maxJob = $default;
+		} else {
+			if ( !is_int( $this->maxJob ) ) {
+				throw new \DomainException( '$gMaxJob must is an integer number of seconds', 111 );
 			}
 		}
 	}
