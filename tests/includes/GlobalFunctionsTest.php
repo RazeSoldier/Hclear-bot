@@ -23,6 +23,7 @@
 namespace HclearBot\test;
 
 use function HclearBot\getEndKey;
+use function HclearBot\isOneDimensionalArray;
 use PHPUnit\Framework\TestCase;
 
 class GlobalFuntionsTest extends TestCase {
@@ -64,5 +65,20 @@ TEXT;
 		];
 		$expected[2] = 5;
 		$this->assertEquals( $expected[2], getEndKey( $arr[2], true ) );
+	}
+
+	/**
+	 * Test isOneDimensionalArray()
+	 */
+	public function testIsOneDimensionalArray() {
+		// Test true return value
+		$arr[1] = [0, 1, 2];
+		$expected[1] = true;
+		$this->assertEquals( $expected[1], isOneDimensionalArray( $arr[1] ) );
+
+		// Test false return value
+		$arr[2] = [0, 1 => [123, 11], 2];
+		$expected[2] = false;
+		$this->assertEquals( $expected[2], isOneDimensionalArray( $arr[2] ) );
 	}
 }

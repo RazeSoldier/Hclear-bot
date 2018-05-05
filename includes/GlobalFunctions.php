@@ -138,3 +138,15 @@ function edit(string $editType, $page, string $text, string $summary = null) {
 	}
 	return $result;
 }
+
+/**
+ * Checks if an array is one-dimensional
+ * @param array $arr
+ * @return bool
+ */
+function isOneDimensionalArray(array $arr) : bool {
+	if ( count( $arr ) === count( $arr, COUNT_RECURSIVE ) ) {
+		return true;
+	}
+	return false;
+}
