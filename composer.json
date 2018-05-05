@@ -3,7 +3,9 @@
         "phpunit/phpunit": "^6.5"
     },
     "require": {
-        "php": "7.0.0",
+        "php": ">7.0.0",
+        "ext-curl": "*",
+        "ext-mbstring": "*",
         "mediawiki/oauthclient": "^0.1.2"
     }
 }
