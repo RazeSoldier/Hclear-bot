@@ -25,7 +25,7 @@ namespace HclearBot\test;
 use PHPUnit\Framework\TestCase;
 
 class APIEditTest extends TestCase {
-	public function testEdit() {
+	public function estEdit() {
 		$result = ( new \HclearBot\APIEdit() )->doEdit( 'WP:沙盒', 'test', '测试' );
 		$expected = 'Success';
 		$this->assertEquals( $expected, $result['edit']['result'] );

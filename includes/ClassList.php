@@ -25,6 +25,7 @@ return [
 	'APIEdit' => APP_PATH . '/includes/api/APIEdit.php',
 	'APIMultipleUnclosedFormattingTags' => APP_PATH . '/includes/api/APIMultipleUnclosedFormattingTags.php',
 	'APIPage' => APP_PATH . '/includes/api/APIPage.php',
+    'ApiQuery' => APP_PATH . '/includes/api/ApiQuery.php',
 	'APIRevisions' => APP_PATH . '/includes/api/APIRevisions.php',
 	'Cache' => APP_PATH . '/includes/Cache.php',
 	'CloseFormatTag' => APP_PATH . '/includes/tidy/CloseFormatTag.php',
