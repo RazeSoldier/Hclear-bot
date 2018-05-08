@@ -22,6 +22,11 @@
 
 namespace HclearBot;
 
+/**
+ * Class using facade pattern
+ * Used to access specific config object
+ * @class
+ */
 class Config {
 	/**
 	 * @var OAuthConfig
