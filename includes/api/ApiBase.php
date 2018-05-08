@@ -40,6 +40,16 @@ abstract class ApiBase {
 	 */
 	protected $apiResponseData;
 
+    /**
+     * @var string Which action to perform.
+     */
+	protected $action;
+
+    /**
+     * @var string The format of the output (Default value: json)
+     */
+	protected $format = 'json';
+
 	/**
 	 * Splicing an API URL according to the provided suffix
 	 * @param string $suffix
