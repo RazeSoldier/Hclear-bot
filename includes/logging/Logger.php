@@ -26,8 +26,13 @@ namespace HclearBot;
  * Logger
  * @class
  */
-class Logger {
+class Logger implements ISingleton {
 	const logExtension = 'log.md';
+
+    /**
+     * @var Logger
+     */
+    static private $instance;
 
 	/**
 	 * @var string Directory path for storing logs
@@ -39,11 +44,22 @@ class Logger {
 	 */
 	private $logs = [];
 
-	/**
+    /**
+     * @return Logger
+     */
+	static public function getInstance() : Logger
+    {
+        if ( self::$instance === null ) {
+            self::$instance = new self;
+        }
+        return self::$instance;
+    }
+
+    /**
 	 * Initialize a Logger object
 	 * @return Logger
 	 */
-	public function __construct() {
+	private function __construct() {
 		$this->logDir = APP_PATH . '/storage/log/';
 		if ( !file_exists( $this->logDir ) ) {
 			if ( !mkdir( $this->logDir ) ) {

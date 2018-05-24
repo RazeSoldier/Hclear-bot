@@ -27,7 +27,12 @@ namespace HclearBot;
  * Used to access specific config object
  * @class
  */
-class Config {
+class Config implements ISingleton {
+    /**
+     * @var Config
+     */
+    static private $instance;
+
 	/**
 	 * @var OAuthConfig
 	 */
@@ -48,11 +53,21 @@ class Config {
 	 */
 	public $jobConfig;
 
-	/**
+    /**
+     * @return Config
+     */
+	static public function getInstance() : Config
+    {
+        if ( self::$instance === null ) {
+            self::$instance = new self;
+        }
+        return self::$instance;
+}
+
+    /**
 	 * Initialize a Config object
-	 * @return Config
 	 */
-	public function __construct() {
+	private function __construct() {
 		$this->authConfig = new OAuthConfig();
 		$this->entryConfig = new EntryConfig();
 		$this->fixerConfig = new FixerConfig();
