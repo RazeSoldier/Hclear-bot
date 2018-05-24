@@ -38,14 +38,13 @@ class Log {
 	protected $logName;
 
 	/**
-	 * @var SplFileObject
+	 * @var \SplFileObject
 	 */
 	protected $file;
 
 	/**
 	 * Initialize a Log object
 	 * @param string $logPath The name of the file you want to create
-	 * @return Log
 	 */
 	public function __construct(string $logPath) {
 		$this->logPath = $logPath;
@@ -62,7 +61,6 @@ class Log {
 	 * Initialize this log
 	 */
 	protected function init() {
-		global $gConfig;
 		$this->write( Markdown::h1( ucfirst( $this->logName ) ) . "\n" ); // Write a title for this log
 	}
 

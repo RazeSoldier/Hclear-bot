@@ -44,7 +44,6 @@ class WMFSite {
 	/**
 	 * Initialize a WMFSite object
 	 * @param string $wiki A wiki abbreviation (E.g. zhwiki, enwiki)
-	 * @return WMFSite
 	 */
 	public function __construct(string $wiki) {
 		if ( !isset( $this->list[$wiki] ) ) {

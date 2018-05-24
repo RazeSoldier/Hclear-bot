@@ -38,8 +38,6 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	 * Initialize a FixMultipleUnclosedFormattingTags object
 	 * First, read the mess left by the previous transaction from the cache
 	 * Then, query the lint error list from the API
-	 *
-	 * @return FixMultipleUnclosedFormattingTags
 	 */
 	public function __construct() {
 		global $gConfig;
@@ -61,8 +59,6 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 
 	/**
 	 * Run this fixer
-	 *
-	 * @return null
 	 */
 	public function execute() {
 		$this->log->write( Markdown::h2( 'Working' ) . "\n" );
@@ -127,7 +123,6 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	/**
 	 * Used to handle the error field that are output from multiple templates
 	 * @param array $data The parameter that passed to main()
-	 * @return null
 	 */
 	private function handleMultiTemplateError(array $data) {
 		$revision = new APIRevisions( $data['pageid'] );
@@ -151,7 +146,6 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	/**
 	 * Used to handle the error field that are output from a template
 	 * @param string $templateName The name of the template that contain lint errors
-	 * @return null
 	 */
 	private function handleTemplateError(string $templateName) {
 		$this->log->write( Markdown::h4( "Fix [[{$templateName}]]" ) . "\n" );

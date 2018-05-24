@@ -67,7 +67,7 @@ function findSubStr(string $str, string $find, int $count, int $offset = 0) : in
  * @param string $errstr
  * @param string $errfile
  * @param int $errline
- * @throws ErrorException
+ * @throws \ErrorException
  */
 function errorHandler(int $errno, string $errstr,string $errfile, int $errline) {
     throw new \ErrorException( $errstr, 0, $errno, $errfile, $errline );
@@ -86,7 +86,7 @@ function branchLine(string $text) : array {
  * OAuth authorize
  * @global Config $gConfig
  * @global WMFSite $gWMFSite
- * @return null
+ * @return void
  */
 function oauthAuthorize() {
 	global $gConfig, $gWMFSite;
@@ -135,7 +135,9 @@ function edit(string $editType, $page, string $text, string $summary = null) {
 		$result = $editor->editPage( $page, $text, $summary );
 	} elseif ( $editType === 'section' ) {
 		$result = $editor->editSection();
-	}
+	} else {
+	    throw new \LogicException(  "Pass undefined option: {$editType}", 10 );
+    }
 	return $result;
 }
 

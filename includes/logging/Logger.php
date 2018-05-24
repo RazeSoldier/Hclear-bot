@@ -57,7 +57,6 @@ class Logger implements ISingleton {
 
     /**
 	 * Initialize a Logger object
-	 * @return Logger
 	 */
 	private function __construct() {
 		$this->logDir = APP_PATH . '/storage/log/';

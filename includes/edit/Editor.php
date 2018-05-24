@@ -22,6 +22,8 @@
 
 namespace HclearBot;
 
+use MediaWiki\OAuthClient\Client;
+
 /**
  * Class that using singleton pattern
  */
@@ -39,7 +41,8 @@ class Editor implements ISingleton {
 	private function __construct() {
 		global $gClient, $gAccessToken, $gWMFSite;
 		if ( self::$editToken === null ) {
-			self::$editToken = json_decode( $gClient->makeOAuthCall( $gAccessToken,
+            /** @var Client $gClient */
+            self::$editToken = json_decode( $gClient->makeOAuthCall( $gAccessToken,
 				$gWMFSite->getApiPoint() . '?action=tokens&format=json'
 			) )->tokens->edittoken;
 		}

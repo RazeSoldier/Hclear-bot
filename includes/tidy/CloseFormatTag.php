@@ -94,11 +94,12 @@ class CloseFormatTag {
 		return $this->value;
 	}
 
-	/**
-	 * Used to handle case that without close tags and only with multiple start tags
-	 * @param int $startTagOffset Offset of the start tag
-	 * @return array
-	 */
+    /**
+     * Used to handle case that without close tags and only with multiple start tags
+     * @param string $needCheckText
+     * @param int $startTagOffset Offset of the start tag
+     * @return array
+     */
 	private function scenario1(string $needCheckText, int $startTagOffset) {
 		if ( mb_substr_count( $needCheckText, $this->tag['start'] ) === 1 ) {
 			$result['text'] = new TextNode( $needCheckText . $this->tag['end'] );
@@ -151,7 +152,9 @@ class CloseFormatTag {
 			$result['text'] = $this->replaceStr( $needCheckText, $fixedStr,
 					$startTagOffset + $this->tagLen['startTag'], $endTagOffset );
 			$result['diff'] = $fixedStr->strLen - $text->strLen;
-		}
+		} else {
+		    throw new \RuntimeException( 'Unknown error', 1 );
+        }
 		return $result;
 	}
 
@@ -173,15 +176,6 @@ class CloseFormatTag {
 	 */
 	private function removeStartTag(string $input) {
 		return mb_ereg_replace( $this->tag['start'], null, $input );
-	}
-
-	/**
-	 * Remove all end tags in the given string
-	 * @param string $input
-	 * @return string
-	 */
-	private function removeEndTag(string $input) {
-		return mb_ereg_replace( $this->tag['end'], null, $input );
 	}
 
 	/**
