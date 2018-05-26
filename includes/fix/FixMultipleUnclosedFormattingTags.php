@@ -50,11 +50,45 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		$api = new APIMultipleUnclosedFormattingTags( 'batch', ['limit' => $gConfig->fixerConfig->maxQuery
 			, 'from' => $lntfrom] );
 		$this->errorList = $api->getData()['query']['linterrors'];
+		$this->preProcess();
 		if ( !defined( 'PHPUNIT_TEST' ) ) {
 			$this->log->write(Markdown::h2('Job Start') . "\n");
 			$this->log->write(Markdown::h3('Query result') . "\n");
 			$this->log->write( Markdown::codeBlock( print_r( $this->errorList, true ) ) . "\n" );
 		}
+	}
+
+	/**
+	 * Pre process the error list before starting repair
+	 */
+	private function preProcess() {
+		$errorList = $this->errorList;
+		// First, generate the ID list of the pages included in the error list
+		foreach ( $errorList as $error ) {
+			$pageIDs[] = $error['pageid'];
+		}
+		// Second, find duplicate page IDs
+		$arrInfo = array_count_values( $pageIDs );
+		// After that, duplicate page error information is put into an array
+		$repeated = [];
+		foreach ( $arrInfo as $pageID => $count ) {
+			$repeatedPage = null;
+			if ( $count > 1 ) {
+				foreach ( $errorList as $key => $error ) {
+					if ( $error['pageid'] === $pageID ) {
+						$repeatedPage[] = $error;
+						unset( $errorList[$key] );
+					}
+				}
+				if ( count( $repeatedPage ) !== $count ) {
+					throw new \RuntimeException( 'Unknown error', 1 );
+				}
+				$repeatedPage['repeated'] = true;
+				$repeated[] = $repeatedPage;
+			}
+		}
+		$this->errorList = array_merge( $errorList, $repeated );
+		sort( $this->errorList );
 	}
 
 	/**
@@ -72,8 +106,14 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	 * Fix a page
 	 * @param array $data The error message of a page
 	 * @param bool Whether to call main() from execute()?
+	 * @return string|null
 	 */
 	private function main(array $data, bool $mainCall = true) {
+		if ( isset( $data['repeated'] ) ) {
+			unset( $data['repeated'] );
+			$this->handleSamePage( $data );
+			return null;
+		}
 		$this->log->write( Markdown::h3( "Fix [[{$data['title']}]]" ) . "\n" );
 		$this->log->write( "Page ID: {$data['pageid']}" . Markdown::newline() );
 		$this->log->write( "Lint error ID: {$data['lintId']}" . Markdown::newline() );
@@ -94,15 +134,55 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		}
 
 		// Do fix
-		$revision = new APIRevisions( $data['pageid'] );
-		$text = $this->catchHTML( $revision->getContent(), $data['location'][0], $data['location'][1] );
-		$result = $this->replaceStr( $revision->getContent(), $this->loopBranchLine( $text, $data['params']['name'] ),
+		if ( !isset( $data['content'] ) ) {
+			$revision = ( new APIRevisions( $data['pageid'] ) )->getContent();
+		} else {
+			$revision = $data['content'];
+		}
+		$text = $this->catchHTML( $revision, $data['location'][0], $data['location'][1] );
+		if ( $mainCall ) {
+			$result = $this->replaceStr( $revision, $this->loopBranchLine( $text, $data['params']['name'] ),
 				$data['location'][0], $data['location'][1] );
+		} else {
+			return $this->loopBranchLine( $text, $data['params']['name'] );
+		}
 
 		$send = edit( 'page',$data['pageid'], $result, 'Fix multiple-unclosed-formatting-tags error' )->getResponse();
 		$this->writeCache( 'lntfrom', $data['lintId'] );
 		$this->loggingResult( [ 'queryResult' => $data, 'sendResult' => $send ] );
 		unset( $revision, $text, $result, $send );
+	}
+
+	private function handleSamePage(array $errors) {
+		$oldVersion = ( new APIRevisions( $errors[0]['pageid'] ) )->getContent();
+		foreach ( $errors as $error ) {
+			$error['content'] = $oldVersion;
+			$result = [
+				'text' => $this->main( $error, false ),
+				'startPos' => $error['location'][0],
+				'endPos' => $error['location'][1]
+			];
+			$results[] = $result;
+		}
+		usort( $results, function ($a, $b) {
+			if ( $a['startPos'] === $b['startPos'] ) {
+				return 0;
+			}
+			return ( $a['startPos'] < $b['startPos'] ) ? -1 : 1;
+		} );
+		$newVersion = null;
+		foreach ( $results as $key => $result ) {
+			if ( $newVersion === null ) {
+				// init the new version
+				$newVersion = mb_substr( $oldVersion, 0, $result['startPos'] );
+			} else {
+				$newVersion = $newVersion
+					.mb_substr( $oldVersion, $results[$key-1]['endPos'], $result['startPos'] - $results[$key-1]['endPos'] );
+			}
+			$newVersion = $newVersion . $result['text'];
+		}
+		$newVersion = $newVersion . mb_substr( $oldVersion, $result['endPos'] );
+		$send = edit( 'page',$errors[0]['pageid'], $newVersion, 'Fix multiple-unclosed-formatting-tags error' )->getResponse();
 	}
 
 	private function loopBranchLine(string $text, string $needCloseTag) : string {
