@@ -26,7 +26,7 @@ namespace HclearBot;
  * Create a log
  * @class
  */
-class JobLog extends Log {
+class JobLog extends LogBase {
 	/**
 	 * Initialize this log
 	 */

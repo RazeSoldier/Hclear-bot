@@ -43,6 +43,7 @@ return [
 	'JobLog' => APP_PATH . '/includes/logging/JobLog.php',
 	'Log' => APP_PATH . '/includes/logging/Log.php',
 	'Logger' => APP_PATH . '/includes/logging/Logger.php',
+	'LogBase' => APP_PATH . '/includes/logging/LogBase.php',
 	'Markdown' => APP_PATH . '/includes/Markdown.php',
 	'OAuthConfig' => APP_PATH . '/includes/config/OAuthConfig.php',
 	'WMFSite' => APP_PATH . '/includes/WMFSite.php',

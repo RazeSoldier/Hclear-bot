@@ -94,9 +94,9 @@ class Logger implements ISingleton {
 	/**
 	 * Get the log
 	 * @param int|string $logIndex Log index value
-	 * @return Log
+	 * @return LogBase
 	 */
-	public function getLog($logIndex) : Log {
+	public function getLog($logIndex) : LogBase {
 		return $this->logs[$logIndex];
 	}
 
