@@ -32,7 +32,8 @@ function classLoader($className) {
 		return false;
 	}
 
-	require_once $gClassList[$wantLoadClass];
+	require $gClassList[$wantLoadClass];
+	return true;
 }
 
 spl_autoload_register( 'classLoader' );
