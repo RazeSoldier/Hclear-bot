@@ -27,7 +27,7 @@ namespace HclearBot;
  *
  * @class
  */
-abstract class Fixer {
+abstract class Fixer implements IRunnable {
 	/**
 	 * @var Log
 	 */
@@ -59,11 +59,6 @@ abstract class Fixer {
 		$fixer = new $fixerName();
 		return $fixer;
 	}
-
-	/**
-	 * The fixer must define this method
-	 */
-	abstract public function execute();
 
 	/**
 	 * Shutdown this fixer

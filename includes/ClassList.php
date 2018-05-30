@@ -37,6 +37,7 @@ return [
 	'Fixer' => APP_PATH . '/includes/fix/Fixer.php',
 	'FixerConfig' => APP_PATH . '/includes/config/FixerConfig.php',
 	'FixMultipleUnclosedFormattingTags' => APP_PATH . '/includes/fix/FixMultipleUnclosedFormattingTags.php',
+	'IRunnable' => APP_PATH . '/includes/interface/IRunnable.php',
 	'ISingleton' => APP_PATH . '/includes/interface/ISingleton.php',
 	'Job' => APP_PATH . '/includes/Job.php',
 	'JobConfig' => APP_PATH . '/includes/config/JobConfig.php',

@@ -1,6 +1,6 @@
 <?php
 /**
- * Bot core
+ * IRunnable interface
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,37 +22,7 @@
 
 namespace HclearBot;
 
-class Core implements IRunnable {
-	/**
-	 * Run bot
-	 */
-	public function run() {
-		session_start();
-		while ( true ) {
-			$this->jobManager();
-			$job = new Job( function() {
-				$workFixer = Fixer::init();
-				$workFixer->execute();
-			} );
-			$job->run();
-			unset( $job );
-		}
-	}
-
-	private function jobManager() {
-		global $gConfig;
-		static $limit;
-		if ( $limit === null ) {
-			$limit = $gConfig->jobConfig->maxJob;
-		}
-
-		if ( $limit === -1 ) {
-			return;
-		}
-		static $jobs = 0;
-		if ( $jobs++ < $limit ) {
-			return;
-		}
-		die( 0 );
-	}
+interface IRunnable
+{
+	public function run();
 }

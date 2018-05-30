@@ -26,7 +26,7 @@ namespace HclearBot;
  * A job
  * @class
  */
-class Job {
+class Job implements IRunnable {
 	/**
 	 * @var callable The code to be executed by this job
 	 */
@@ -66,7 +66,7 @@ class Job {
 	/**
 	 * To execute this job
 	 */
-	public function execute() {
+	public function run() {
 		call_user_func( $this->jobCode );
 	}
 
