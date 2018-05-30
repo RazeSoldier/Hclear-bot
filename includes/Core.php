@@ -31,8 +31,9 @@ class Core implements IRunnable {
 		while ( true ) {
 			$this->jobManager();
 			$job = new Job( function() {
+				/** @var Fixer $workFixer */
 				$workFixer = Fixer::init();
-				$workFixer->execute();
+				$workFixer->run();
 			} );
 			$job->run();
 			unset( $job );

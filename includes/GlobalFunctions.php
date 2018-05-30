@@ -85,12 +85,11 @@ function branchLine(string $text) : array {
 /**
  * OAuth authorize
  * @global Config $gConfig
- * @global WMFSite $gWMFSite
  * @return void
  */
 function oauthAuthorize() {
-	global $gConfig, $gWMFSite;
-	$endpoint = $gWMFSite->getEndpoint();
+	global $gConfig;
+	$endpoint = getEndPoint();
 	$conf = new ClientConfig( $endpoint );
 	$conf->setConsumer( new Consumer( $gConfig->authConfig->consumerKey, $gConfig->authConfig->consumerSecret ) );
 
@@ -151,4 +150,30 @@ function isOneDimensionalArray(array $arr) : bool {
 		return true;
 	}
 	return false;
+}
+
+/**
+ * Get OAuth end point
+ * @return string OAuth end point
+ */
+function getEndPoint() : string {
+	static $endPoint;
+	if ( $endPoint === null ) {
+		$wikiName = Config::getInstance()->entryConfig->entryPoint;
+		$endPoint = 'https://' . WMFSite::getSiteDomain( $wikiName )  . '/w/index.php?title=Special:OAuth';
+	}
+	return $endPoint;
+}
+
+/**
+ * Get the API point for the entry wiki
+ * @return string The API point for the entry wiki
+ */
+function getApiPoint() {
+	static $apiPoint;
+	if ( $apiPoint === null ) {
+		$wikiName = Config::getInstance()->entryConfig->entryPoint;
+		$apiPoint = 'https://' . WMFSite::getSiteDomain( $wikiName )  . '/w/api.php';
+	}
+	return $apiPoint;
 }
