@@ -65,6 +65,4 @@ $gLogger = \HclearBot\Logger::getInstance();
 
 $gConfig = \HclearBot\Config::getInstance();
 
-$gWMFSite = new \HclearBot\WMFSite( $gConfig->entryConfig->entryPoint );
-
 HclearBot\oauthAuthorize();

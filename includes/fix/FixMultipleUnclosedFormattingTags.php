@@ -94,7 +94,7 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	/**
 	 * Run this fixer
 	 */
-	public function execute() {
+	public function run() {
 		$this->log->write( Markdown::h2( 'Working' ) . "\n" );
 		$count = count( $this->errorList );
 		for ( $i = 0; $i < $count; $i++ ) {

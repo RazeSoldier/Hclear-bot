@@ -1,6 +1,6 @@
 <?php
 /**
- * Used to manage a log
+ * IRunnable interface
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,21 +22,7 @@
 
 namespace HclearBot;
 
-/**
- * Create a log
- * @class
- */
-class JobLog extends LogBase {
-	/**
-	 * Initialize this log
-	 */
-	public function init() {
-		global $gConfig;
-		$this->write( Markdown::h1( ucfirst( $this->logName ) ) . "\n" ); // Write a title for this log
-
-		// Write a base information for this job
-		$this->write( Markdown::h2( 'Job information' ) . "\n" );
-		$this->write( 'Start time: ' . $_SESSION['jobStartTime'] . Markdown::newline() );
-		$this->write( 'Fix type: ' . $gConfig->fixerConfig->fixType . Markdown::newline() );
-	}
+interface IRunnable
+{
+	public function run();
 }

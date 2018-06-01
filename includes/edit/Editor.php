@@ -39,11 +39,11 @@ class Editor implements ISingleton {
 	private static $editToken;
 
 	private function __construct() {
-		global $gClient, $gAccessToken, $gWMFSite;
+		global $gClient, $gAccessToken;
 		if ( self::$editToken === null ) {
             /** @var Client $gClient */
             self::$editToken = json_decode( $gClient->makeOAuthCall( $gAccessToken,
-				$gWMFSite->getApiPoint() . '?action=tokens&format=json'
+				getApiPoint() . '?action=tokens&format=json'
 			) )->tokens->edittoken;
 		}
 	}
@@ -99,11 +99,11 @@ class Editor implements ISingleton {
 	 * @return string Response
 	 */
 	private function sendRequest(array $apiParams) : string {
-		global $gClient, $gAccessToken, $gWMFSite;
+		global $gClient, $gAccessToken;
 		$gClient->setExtraParams( $apiParams );
 		return $gClient->makeOAuthCall(
 			$gAccessToken,
-			$gWMFSite->getApiPoint(),
+			getApiPoint(),
 			true,
 			$apiParams
 		);

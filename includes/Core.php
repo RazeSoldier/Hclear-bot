@@ -22,7 +22,7 @@
 
 namespace HclearBot;
 
-class Core {
+class Core implements IRunnable {
 	/**
 	 * Run bot
 	 */
@@ -31,10 +31,11 @@ class Core {
 		while ( true ) {
 			$this->jobManager();
 			$job = new Job( function() {
+				/** @var Fixer $workFixer */
 				$workFixer = Fixer::init();
-				$workFixer->execute();
+				$workFixer->run();
 			} );
-			$job->execute();
+			$job->run();
 			unset( $job );
 		}
 	}
