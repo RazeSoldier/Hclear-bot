@@ -54,8 +54,8 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 			$this->log->write(Markdown::h2('Job Start') . "\n");
 			$this->log->write(Markdown::h3('Query result') . "\n");
 			$this->log->write( Markdown::codeBlock( print_r( $this->errorList, true ) ) . "\n" );
+			$this->preProcess();
 		}
-		$this->preProcess();
 	}
 
 	/**
