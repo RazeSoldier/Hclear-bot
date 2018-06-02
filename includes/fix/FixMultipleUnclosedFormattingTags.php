@@ -55,6 +55,37 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 			$this->log->write(Markdown::h3('Query result') . "\n");
 			$this->log->write( Markdown::codeBlock( print_r( $this->errorList, true ) ) . "\n" );
 		}
+		$this->preProcess();
+	}
+
+	/**
+	 * Pre process the error list before starting repair
+	 */
+	private function preProcess() {
+		$this->log->write( Markdown::h2( 'Pre process' ) . "\n" );
+		// First, generate the ID list of the pages included in the error list
+		foreach ( $this->errorList as $error ) {
+			$pageIDs[] = $error['pageid'];
+		}
+		// Second, find duplicate page IDs
+		$arrInfo = array_count_values( $pageIDs );
+		// After that, duplicate page error information is put into an array
+		foreach ( $arrInfo as $pageID => $count ) {
+			$repeatedCount = 0;
+			if ( $count > 1 ) {
+				foreach ( $this->errorList as $key => $error ) {
+					if ( $error['pageid'] === $pageID ) {
+						$repeatedCount++;
+						$this->log->write( "Ignore {$error['lintId']} error." . Markdown::newline() );
+						unset( $this->errorList[$key] );
+					}
+				}
+				if ( $repeatedCount !== $count ) {
+					throw new \RuntimeException( 'Unknown error', 1 );
+				}
+			}
+		}
+		sort( $this->errorList );
 	}
 
 	/**
