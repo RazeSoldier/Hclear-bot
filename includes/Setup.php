@@ -48,6 +48,7 @@ mb_internal_encoding( 'UTF-8' );
 if ( !is_readable( APP_PATH . '/config.php' ) ) {
 	trigger_error( 'Unable to read configuration file or the file does not exist', E_USER_ERROR );
 }
+$gIsSemiFix = true;
 require_once APP_PATH . '/config.php';
 
 require_once APP_PATH . '/includes/AutoLoader.php';
