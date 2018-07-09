@@ -21,3 +21,7 @@ $gMaxJob = ''; // An integer number that specify job execute times (Default valu
 $gFixerMaxQuery = ''; // An integer number that each working maximum query lint API (Default value: 20)
 
 $gAllowFixNamespace = ''; // An integer number or an array that Hclear-bot only fix there namespaces
+
+$gEditMsg = ''; // The edit message, (Default value: 'Fix multiple-unclosed-formatting-tags error')
+
+$gIsSemiFix = true; // Whether to enable semi-automatic fix (Default value: true)

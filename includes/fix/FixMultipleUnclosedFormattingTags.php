@@ -105,6 +105,7 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 	 * @param bool Whether to call main() from execute()?
 	 */
 	private function main(array $data, bool $mainCall = true) {
+		global $gEditMsg, $gIsSemiFix;
 		$this->log->write( Markdown::h3( "Fix [[{$data['title']}]]" ) . "\n" );
 		$this->log->write( "Page ID: {$data['pageid']}" . Markdown::newline() );
 		$this->log->write( "Lint error ID: {$data['lintId']}" . Markdown::newline() );
@@ -127,10 +128,25 @@ class FixMultipleUnclosedFormattingTags extends Fixer {
 		// Do fix
 		$revision = new APIRevisions( $data['pageid'] );
 		$text = $this->catchHTML( $revision->getContent(), $data['location'][0], $data['location'][1] );
-		$result = $this->replaceStr( $revision->getContent(), $this->loopBranchLine( $text, $data['params']['name'] ),
+		$fixResult = $this->loopBranchLine( $text, $data['params']['name'] );
+		$result = $this->replaceStr( $revision->getContent(), $fixResult,
 				$data['location'][0], $data['location'][1] );
 
-		$send = edit( 'page',$data['pageid'], $result, 'Fix multiple-unclosed-formatting-tags error' )->getResponse();
+		if ( $gIsSemiFix ) {
+			echo "------\nTag: {$data['params']['name']}\nPageID: {$data['pageid']}\n---\nOld:\n$text\n---\nNew:\n$fixResult\n";
+			$userInput = trim( fgets( fopen( 'php://stdin', 'r' ) ) );
+			if ( $userInput !== 'y' ) {
+				$this->writeCache( 'lntfrom', $data['lintId'] );
+				return;
+			}
+		}
+
+		if ( empty( $gEditMsg ) ) {
+			$editMsg = 'Fix multiple-unclosed-formatting-tags error';
+		} else {
+			$editMsg = $gEditMsg;
+		}
+		$send = edit( 'page',$data['pageid'], $result, $gEditMsg )->getResponse();
 		$this->writeCache( 'lntfrom', $data['lintId'] );
 		$this->loggingResult( [ 'queryResult' => $data, 'sendResult' => $send ] );
 		unset( $revision, $text, $result, $send );
